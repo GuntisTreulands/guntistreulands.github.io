@@ -1,0 +1,34 @@
+
+{% assign full_page_url = site.url | append: page.url %}
+
+{% assign issue_number = page.title | remove: 'Issue #' %}
+
+{% assign issue_title_params = '?title=Feedback on issue ' | append: issue_number %}
+{% assign issue_body_params = '&body=Comments, Questions, Feedback: ' | append: full_page_url %}
+{% assign issue_label_params = '&labels=questions%20%26%20comments' %}
+{% assign issue_all_params = issue_title_params | append: issue_body_params | append: issue_label_params %}
+
+{% assign open_issue_url = site.links.issue | append: issue_all_params %}
+
+<footer class="container container-fluid">
+<hr>
+    <p class="text-muted text-center">
+        <small>
+        <strong>Questions? Feedback? Corrections?</strong><br/>
+        Open an <a href="{{ open_issue_url }}" target="_blank">issue</a> or
+        submit a <a href="{{ site.links.pull }}" target="_blank">pull request</a>.
+        </small>
+    </p>
+
+    <div class="row social">
+        <div class="col-sm-12 col-sm-offset-0 col-md-8 col-md-offset-2">
+            <ul class="inline center">
+                <li><a href="{{ site.links.twitter }}" title="Follow on Twitter" target="_blank"><i class="fa fa-2x fa-twitter" aria-hidden="true"></i></a></li>
+                <li><a href="{{ site.links.github }}" title="Contribute on Github" target="_blank"><i class="fa fa-2x fa-github" aria-hidden="true"></i></a></li>
+                <li><a href="{{ site.links.rss }}" title="Subscribe via RSS/atom"><i class="fa fa-2x fa-rss" aria-hidden="true"></i></a></li>
+                <li><a href="{{ site.links.applenews }}" title="Add to Apple News"><i class="fa fa-2x fa-apple" aria-hidden="true"></i></a></li>
+                <li><a href="/search" title="Search issues"><i class="fa fa-2x fa-search" aria-hidden="true"></i></a></li>
+            </ul>
+        </div> <!-- col -->
+    </div> <!-- row -->
+</footer>
