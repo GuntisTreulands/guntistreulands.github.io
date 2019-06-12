@@ -726,13 +726,13 @@ code {
  */
 pre {
   margin-bottom: 1.5em;
-  background-color: #1a1a1a;
+  background-color: #b98888;
   padding: 16px 0;
   border-radius: 16px;
 }
 
 pre code {
-  background-color: #1a1a1a;
+  background-color: #218813;
   font-family: monospace;
   display: block;
   padding: 0 20px;
