@@ -71,8 +71,8 @@ body {
 
 .container {
   margin: 0 auto;
-  max-width: 740px;
-  padding: 0 10px;
+  max-width: 1000px;
+  padding: 0 30px;
   width: 100%;
 }
 
@@ -315,6 +315,63 @@ nav a {
 footer {
   padding: 20px 0;
   text-align: center;
+}
+
+.tags {
+  list-style: none;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+.tags li {
+  float: left;
+}
+
+.tag {
+  background: #f04d38a1;
+  border-radius: 3px 0 0 3px;
+  color: white;
+  display: inline-block;
+  height: 26px;
+  line-height: 26px;
+  padding: 0 20px 0 23px;
+  position: relative;
+  margin: 0 10px 10px 0;
+  text-decoration: none;
+  -webkit-transition: color 0.2s;
+}
+
+.tag::before {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: inset 0 1px #f04d38a1;
+  content: '';
+  height: 6px;
+  left: 10px;
+  position: absolute;
+  width: 6px;
+  top: 10px;
+}
+
+.tag::after {
+  background: #fff;
+  border-bottom: 13px solid transparent;
+  border-left: 10px solid #f04d38a1;
+  border-top: 13px solid transparent;
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.tag:hover {
+  background-color: #f05138;
+  color: white;
+}
+
+.tag:hover::after {
+  border-left-color: #f05138;
 }
 
 .highlight {
@@ -726,17 +783,17 @@ code {
  */
 pre {
   margin-bottom: 1.5em;
-  background-color: #b98888;
+  background-color: #f3f3f3;
   padding: 16px 0;
   border-radius: 16px;
 }
 
 pre code {
-  background-color: #218813;
+  background-color: #f3f3f3;
   font-family: monospace;
   display: block;
   padding: 0 20px;
-  color: #fff;
+  color: #000000;
   line-height: 1.4em;
   font-size: 0.95em;
   overflow-x: auto;
@@ -744,31 +801,31 @@ pre code {
 }
 
 pre code .keyword {
-  color: #fd7cb2;
+  color: #AA0D91;
 }
 
 pre code .type {
-  color: #8ed1c3;
+  color: #3F6E74;
 }
 
 pre code .call {
-  color: #fff;
+  color: #2E0D6E;
 }
 
 pre code .property {
-  color: #fff;
+  color: #26474B;
 }
 
 pre code .number {
-  color: #db6f57;
+  color: #1C00CF;
 }
 
 pre code .string {
-  color: #fd8273;
+  color: #C41A16;
 }
 
 pre code .comment {
-  color: #6b8a94;
+  color: #007400;
 }
 
 pre code .dotAccess {
@@ -776,5 +833,5 @@ pre code .dotAccess {
 }
 
 pre code .preprocessing {
-  color: #fba15e;
+  color: #643820;
 }
