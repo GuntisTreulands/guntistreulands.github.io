@@ -80,8 +80,6 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #222;
   font-weight: bold;
-  line-height: 1.7;
-  margin: 1em 0 15px;
   padding: 0;
 }
 @media screen and (max-width: 640px) {
@@ -160,18 +158,22 @@ img {
   max-width: none;
 }
 
+.excerpt {
+  color: #666;
+}
+
 .date {
   font-style: italic;
   color: #666;
 }
 
 ::-moz-selection {
-  color: #000;
+  color: #1a1919;
   background: #eee;
 }
 
 ::selection {
-  color: #000;
+  color: #1a1919;
   background: #eee;
 }
 
@@ -280,7 +282,7 @@ nav a {
 }
 
 .posts > .post {
-  padding-bottom: 2em;
+  padding-bottom: 1em;
   border-bottom: 1px solid #eee;
 }
 
@@ -329,49 +331,75 @@ footer {
 }
 
 .tag {
-  background: #f04d38a1;
-  border-radius: 3px 0 0 3px;
-  color: white;
+  background: #eee;
+  border-radius: 10px;
+  color: #707070;
   display: inline-block;
-  height: 26px;
-  line-height: 26px;
+  height: 20px;
+  line-height: 20px;
   padding: 0 20px 0 23px;
   position: relative;
   margin: 0 10px 10px 0;
   text-decoration: none;
   -webkit-transition: color 0.2s;
+  font-size: 15px;
 }
 
 .tag::before {
   background: #fff;
-  border-radius: 10px;
-  box-shadow: inset 0 1px #f04d38a1;
+  border-radius: 20px;
+  box-shadow: inset 0 1px #707070;
   content: '';
   height: 6px;
   left: 10px;
   position: absolute;
   width: 6px;
-  top: 10px;
-}
-
-.tag::after {
-  background: #fff;
-  border-bottom: 13px solid transparent;
-  border-left: 10px solid #f04d38a1;
-  border-top: 13px solid transparent;
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 0;
+  top: 7px;
 }
 
 .tag:hover {
-  background-color: #f05138;
-  color: white;
+  background-color: #eee;
+  color: #707070;
+  font-size: 15px;
 }
 
 .tag:hover::after {
-  border-left-color: #f05138;
+  border-left-color: #eee;
+}
+
+.PageNavigation {
+  font-size: 18px;
+  display: block;
+  width: auto;
+  overflow: hidden;
+}
+
+.PageNavigation a {
+  display: block;
+  width: 50%;
+  float: left;
+  margin: 1em 30;
+}
+
+.PageNavigation .totalRight {
+  display: block;
+  width: 100%;
+  float: right;
+  margin: 1em 30;
+  text-align: right;
+}
+
+.PageNavigation .next {
+  text-align: right;
+}
+
+img[src~="bordered"] {
+  border: 1px solid black;
+}
+
+img[src~="thumbnail"] {
+  width: 150px;
+  height: 100px;
 }
 
 .highlight {
