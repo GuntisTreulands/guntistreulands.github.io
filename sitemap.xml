@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>http://localhost:4000/NSLayoutAnchor_UITableViewCell.html</loc>
+<loc>http://guntistreulands.github.io/NSLayoutAnchor_UITableViewCell.html</loc>
 <lastmod>2019-06-18T00:00:00+03:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/about/</loc>
+<loc>http://guntistreulands.github.io/about/</loc>
 </url>
 <url>
-<loc>http://localhost:4000/</loc>
+<loc>http://guntistreulands.github.io/</loc>
 </url>
 </urlset>
