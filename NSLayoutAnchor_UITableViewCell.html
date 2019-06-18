@@ -84,7 +84,7 @@ priceLabel.<span class="property">translatesAutoresizingMaskIntoConstraints</spa
 
 <h6 id="1-background-imageview">1.) Background imageView</h6>
 
-<p>Then we set up background image view (shadowy frame). It depends on the type of graphic you have (I had a lot of shadows), So I simply set it to be from top/bottom/left/right to be offset from contentView borders. 
+<p>Then we set up background image view (shadowy frame). It depends on the type of graphic you have (I had a lot of shadows), So I simply set it to be offset from top/bottom/left/right borders of contentView. 
 Right and bottom is negative, so they would be inset.</p>
 <pre class="splash"><code>backgroundImageView.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: contentView.<span class="property">leftAnchor</span>, constant: <span class="number">15</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 backgroundImageView.<span class="property">topAnchor</span>.<span class="call">constraint</span>(equalTo: contentView.<span class="property">topAnchor</span>, constant: <span class="number">15</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
