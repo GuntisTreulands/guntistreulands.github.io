@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>NSLayoutAnchor & UITableViewCell – Guntis Treulands – Blog about swift coding</title>
+
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+    
+    <meta name="description" content="test" />
+    <meta property="og:description" content="test" />
+    
+    <meta name="author" content="Guntis Treulands" />
+
+    
+    <meta property="og:title" content="NSLayoutAnchor & UITableViewCell" />
+    <meta property="twitter:title" content="NSLayoutAnchor & UITableViewCell" />
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="Guntis Treulands - Blog about swift coding" href="/feed.xml" />
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+  </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <!-- <a href="/" class="site-avatar"><img src="http://static1.squarespace.com/static/558def25e4b0fc259f066636/5a49786bf9619ae3bb6a2564/5b68eeacaa4a99da3bcdc610/1545107487365/Swift_logo.png" /></a> -->
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="/">Guntis Treulands</a></h1>
+            <p class="site-description">Blog about swift coding</p>
+          </div>
+
+          <!-- <nav>
+            <a href="/swift">Swift</a>
+            <a href="/experiments">Experiments</a>
+            <a href="/about">About</a>
+          </nav> -->
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <center><z class="date">June 18, 2019</z></center>
+
+<article class="post">
+  <center><h1>NSLayoutAnchor & UITableViewCell</h1></center>
+  
+  <center><z class="excerpt">1 minute read</z></center>
+  
+  <div class="entry">
+    <p>This was my requirement:</p>
+
+<p><img src="/assets/2019-6-18-sketch-requirement.png# bordered" alt="Pic" /></p>
+
+<p>I decided to use a custom UITableViewCell. I created also a xib file, to lay out the UI part:</p>
+
+<p><img src="/assets/2019-6-18-xib-setup.png# bordered" alt="Pic" /></p>
+
+<p>I wanted to try out NSLayoutAnchor’s, as I’ve never used them before. And I implemented them in code:</p>
+
+<p>First set for all of the properties - translatesAutoresizingMaskIntoConstraints = false</p>
+
+<pre class="splash"><code>backgroundImageView.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
+iconImageView.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
+titleLabel.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
+addressesLabel.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
+priceLabel.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
+</code></pre>
+
+<p>Then we set up background image view (shadowy frame). It depends on the type of graphic you have (I had a lot of shadows), So I simply set it to be from top/bottom/left/right to be offset from contentView borders. 
+Right and bottom is negative, so they would be inset.</p>
+<pre class="splash"><code>backgroundImageView.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: contentView.<span class="property">leftAnchor</span>, constant: <span class="number">15</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+backgroundImageView.<span class="property">topAnchor</span>.<span class="call">constraint</span>(equalTo: contentView.<span class="property">topAnchor</span>, constant: <span class="number">15</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+backgroundImageView.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: contentView.<span class="property">rightAnchor</span>, constant: -<span class="number">10</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+backgroundImageView.<span class="property">bottomAnchor</span>.<span class="call">constraint</span>(equalTo: contentView.<span class="property">bottomAnchor</span>, constant: -<span class="number">10</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+</code></pre>
+
+<p>Icon is always in the top left corner, and we also know it’s size.</p>
+<pre class="splash"><code>iconImageView.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: backgroundImageView.<span class="property">leftAnchor</span>, constant: <span class="number">10</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+iconImageView.<span class="property">topAnchor</span>.<span class="call">constraint</span>(equalTo: backgroundImageView.<span class="property">topAnchor</span>, constant: <span class="number">10</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+iconImageView.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">33</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+iconImageView.<span class="property">heightAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">33</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+</code></pre>
+
+<p>Title label is also always at the top left corner, next to icon. But width and height will be auto-calculated.</p>
+<pre class="splash"><code>titleLabel.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: iconImageView.<span class="property">rightAnchor</span>, constant: <span class="number">10</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+titleLabel.<span class="property">topAnchor</span>.<span class="call">constraint</span>(equalTo: backgroundImageView.<span class="property">topAnchor</span>, constant: <span class="number">6</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+</code></pre>
+
+<p>Addresses label is always under the title label, and cell should end at the bottom of address label</p>
+<pre class="splash"><code>addressesLabel.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: iconImageView.<span class="property">rightAnchor</span>, constant: <span class="number">10</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+addressesLabel.<span class="property">topAnchor</span>.<span class="call">constraint</span>(equalTo: titleLabel.<span class="property">bottomAnchor</span>, constant: <span class="number">3</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+addressesLabel.<span class="property">bottomAnchor</span>.<span class="call">constraint</span>(equalTo: backgroundImageView.<span class="property">bottomAnchor</span>, constant: -<span class="number">12</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+</code></pre>
+
+<p>Price label should begin where ends titleLabel, or addressLabel
+This will at the very least - constraint the titleLabel / addressLabel widths</p>
+<pre class="splash"><code>priceLabel.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(greaterThanOrEqualTo: titleLabel.<span class="property">rightAnchor</span>, constant: <span class="number">6</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+priceLabel.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(greaterThanOrEqualTo: addressesLabel.<span class="property">rightAnchor</span>, constant: <span class="number">6</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+</code></pre>
+
+<p>For priceLabel we set the right side, top side and bottom (as it is centered in right side)</p>
+<pre class="splash"><code>priceLabel.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: backgroundImageView.<span class="property">rightAnchor</span>, constant: -<span class="number">18</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+priceLabel.<span class="property">topAnchor</span>.<span class="call">constraint</span>(equalTo: backgroundImageView.<span class="property">topAnchor</span>, constant: <span class="number">6</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+priceLabel.<span class="property">bottomAnchor</span>.<span class="call">constraint</span>(equalTo: backgroundImageView.<span class="property">bottomAnchor</span>, constant: -<span class="number">12</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+</code></pre>
+
+<p>We also need to provide some minimum width for the price label, so that it would not shrink smaller because of title or address.</p>
+<pre class="splash"><code>priceLabel.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(greaterThanOrEqualToConstant: <span class="number">80</span>).<span class="property">isActive</span> = <span class="keyword">true</span>    
+</code></pre>
+
+<p>And the final result:
+<img src="/assets/2019-6-18-result-simulator# bordered" alt="Pic" /></p>
+
+<p>P.S.
+At first, I used a very large exported image for backgroundImageView. And because image by default was quite large, it then forced cell to be larger:</p>
+
+<p><img src="/assets/2019-6-18-problematic-result-simulator# bordered" alt="Pic" /></p>
+
+<p>And the solution was simply to export a minimal size image for backgroundImageView (which then could be sliced):</p>
+
+<p><img src="/assets/2019-6-18-tiny-bg# bordered" alt="Pic" /></p>
+
+  </div>
+
+  <!-- <div class="date">
+    Written on June 18, 2019
+  </div> -->
+
+  
+</article>
+
+    </div>
+    <br>
+    <div class="container">
+    <div class="PageNavigation">
+        
+          
+        
+        
+      </div>
+    </div>
+
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+<a href="mailto:gtreulands@gmail.com"><i class="svg-icon email"></i></a>
+
+
+<a href="https://github.com/GuntisTreulands"><i class="svg-icon github"></i></a>
+
+<a href="https://www.linkedin.com/in/guntis-t-325905161"><i class="svg-icon linkedin"></i></a>
+
+
+<a href="https://www.twitter.com/gtreulands"><i class="svg-icon twitter"></i></a>
+<a href="http://stackoverflow.com/users/894671/guntis-treulands"><i class="svg-icon stackoverflow"></i></a>
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+
+  </body>
+</html>
