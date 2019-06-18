@@ -9,8 +9,8 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
 
     
-    <meta name="description" content="test" />
-    <meta property="og:description" content="test" />
+    <meta name="description" content="Use NSLayoutAnchors to set up a custom UITableViewCell. Add elements in a xib file, but set up anchors in code." />
+    <meta property="og:description" content="Use NSLayoutAnchors to set up a custom UITableViewCell. Add elements in a xib file, but set up anchors in code." />
     
     <meta name="author" content="Guntis Treulands" />
 
@@ -55,20 +55,23 @@
 <article class="post">
   <center><h1>NSLayoutAnchor & UITableViewCell</h1></center>
   
-  <center><z class="excerpt">1 minute read</z></center>
+  <center><z class="excerpt">2 minutes read</z></center>
   
   <div class="entry">
-    <p>This was my requirement:</p>
+    <h2 id="-requirement">▶ Requirement</h2>
 
 <p><img src="/assets/2019-6-18-sketch-requirement.png# bordered" alt="Pic" /></p>
 
-<p>I decided to use a custom UITableViewCell. I created also a xib file, to lay out the UI part:</p>
+<p>I decided to use a custom UITableViewCell. I also created a xib file, to lay out the UI part:</p>
 
 <p><img src="/assets/2019-6-18-xib-setup.png# bordered" alt="Pic" /></p>
 
-<p>I wanted to try out NSLayoutAnchor’s, as I’ve never used them before. And I implemented them in code:</p>
+<p>I wanted to try out NSLayoutAnchor’s, as I’ve never used them before. And I implemented them in code.
+<br /><br /></p>
 
-<p>First set for all of the properties - translatesAutoresizingMaskIntoConstraints = false</p>
+<h2 id="-solution">▶ Solution</h2>
+
+<p>First set for all of the properties - <code class="highlight">translatesAutoresizingMaskIntoConstraints = false </code></p>
 
 <pre class="splash"><code>backgroundImageView.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
 iconImageView.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
@@ -76,6 +79,10 @@ titleLabel.<span class="property">translatesAutoresizingMaskIntoConstraints</spa
 addressesLabel.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
 priceLabel.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
 </code></pre>
+
+<p>And then set up anchors for all the outlets:</p>
+
+<h6 id="1-background-imageview">1.) Background imageView</h6>
 
 <p>Then we set up background image view (shadowy frame). It depends on the type of graphic you have (I had a lot of shadows), So I simply set it to be from top/bottom/left/right to be offset from contentView borders. 
 Right and bottom is negative, so they would be inset.</p>
@@ -85,6 +92,8 @@ backgroundImageView.<span class="property">rightAnchor</span>.<span class="call"
 backgroundImageView.<span class="property">bottomAnchor</span>.<span class="call">constraint</span>(equalTo: contentView.<span class="property">bottomAnchor</span>, constant: -<span class="number">10</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 </code></pre>
 
+<h6 id="2-icon-imageview">2.) Icon imageView</h6>
+
 <p>Icon is always in the top left corner, and we also know it’s size.</p>
 <pre class="splash"><code>iconImageView.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: backgroundImageView.<span class="property">leftAnchor</span>, constant: <span class="number">10</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 iconImageView.<span class="property">topAnchor</span>.<span class="call">constraint</span>(equalTo: backgroundImageView.<span class="property">topAnchor</span>, constant: <span class="number">10</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
@@ -92,16 +101,22 @@ iconImageView.<span class="property">widthAnchor</span>.<span class="call">const
 iconImageView.<span class="property">heightAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">33</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 </code></pre>
 
+<h6 id="3-title-label">3.) Title label</h6>
+
 <p>Title label is also always at the top left corner, next to icon. But width and height will be auto-calculated.</p>
 <pre class="splash"><code>titleLabel.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: iconImageView.<span class="property">rightAnchor</span>, constant: <span class="number">10</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 titleLabel.<span class="property">topAnchor</span>.<span class="call">constraint</span>(equalTo: backgroundImageView.<span class="property">topAnchor</span>, constant: <span class="number">6</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 </code></pre>
+
+<h6 id="4-address-label">4.) Address label</h6>
 
 <p>Addresses label is always under the title label, and cell should end at the bottom of address label</p>
 <pre class="splash"><code>addressesLabel.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: iconImageView.<span class="property">rightAnchor</span>, constant: <span class="number">10</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 addressesLabel.<span class="property">topAnchor</span>.<span class="call">constraint</span>(equalTo: titleLabel.<span class="property">bottomAnchor</span>, constant: <span class="number">3</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 addressesLabel.<span class="property">bottomAnchor</span>.<span class="call">constraint</span>(equalTo: backgroundImageView.<span class="property">bottomAnchor</span>, constant: -<span class="number">12</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 </code></pre>
+
+<h6 id="5-price-label">5.) Price label</h6>
 
 <p>Price label should begin where ends titleLabel, or addressLabel
 This will at the very least - constraint the titleLabel / addressLabel widths</p>
@@ -119,17 +134,21 @@ priceLabel.<span class="property">bottomAnchor</span>.<span class="call">constra
 <pre class="splash"><code>priceLabel.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(greaterThanOrEqualToConstant: <span class="number">80</span>).<span class="property">isActive</span> = <span class="keyword">true</span>    
 </code></pre>
 
-<p>And the final result:
-<img src="/assets/2019-6-18-result-simulator# bordered" alt="Pic" /></p>
+<h2 id="-result">▶ Result</h2>
 
-<p>P.S.
-At first, I used a very large exported image for backgroundImageView. And because image by default was quite large, it then forced cell to be larger:</p>
+<p>And the final result:</p>
 
-<p><img src="/assets/2019-6-18-problematic-result-simulator# bordered" alt="Pic" /></p>
+<p><img src="/assets/2019-6-18-result-simulator.png# bordered-screenshots" alt="Pic" /></p>
+
+<h2 id="-ps">▶ P.S.</h2>
+
+<p>At first, I used a very large exported image for backgroundImageView. And because image by default was quite large, it then forced cell to be larger:</p>
+
+<p><img src="/assets/2019-6-18-problematic-result-simulator.png# bordered-screenshots" alt="Pic" /></p>
 
 <p>And the solution was simply to export a minimal size image for backgroundImageView (which then could be sliced):</p>
 
-<p><img src="/assets/2019-6-18-tiny-bg# bordered" alt="Pic" /></p>
+<p><img src="/assets/2019-6-18-tiny-bg.png# bordered" alt="Pic" /></p>
 
   </div>
 
