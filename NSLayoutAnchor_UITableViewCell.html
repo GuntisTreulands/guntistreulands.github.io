@@ -40,11 +40,11 @@
             <p class="site-description">Blog about swift coding</p>
           </div>
 
-          <!-- <nav>
-            <a href="/swift">Swift</a>
-            <a href="/experiments">Experiments</a>
+           <nav>
+            <!-- <a href="/swift">Swift</a> -->
+            <!-- <a href="/experiments">Experiments</a> -->
             <a href="/about">About</a>
-          </nav> -->
+          </nav>
         </header>
       </div>
     </div>
@@ -56,9 +56,9 @@
   <center><h1>NSLayoutAnchor & UITableViewCell</h1></center>
   
   <center><z class="excerpt">2 minutes read</z></center>
-  
+  <br> <br> <br>
   <div class="entry">
-    <h2 id="-requirement">▶ Requirement</h2>
+    <h2 id="requirement">Requirement</h2>
 
 <p><img src="/assets/2019-6-18-sketch-requirement.png# bordered" alt="Pic" /></p>
 
@@ -69,7 +69,7 @@
 <p>I wanted to try out NSLayoutAnchor’s, as I’ve never used them before. And I implemented them in code.
 <br /><br /></p>
 
-<h2 id="-solution">▶ Solution</h2>
+<h2 id="solution">Solution</h2>
 
 <p>First set for all of the properties - <code class="highlight">translatesAutoresizingMaskIntoConstraints = false </code></p>
 
@@ -134,13 +134,13 @@ priceLabel.<span class="property">bottomAnchor</span>.<span class="call">constra
 <pre class="splash"><code>priceLabel.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(greaterThanOrEqualToConstant: <span class="number">80</span>).<span class="property">isActive</span> = <span class="keyword">true</span>    
 </code></pre>
 
-<h2 id="-result">▶ Result</h2>
+<h2 id="result">Result</h2>
 
 <p>And the final result:</p>
 
 <p><img src="/assets/2019-6-18-result-simulator.png# bordered-screenshots" alt="Pic" /></p>
 
-<h2 id="-ps">▶ P.S.</h2>
+<h2 id="ps">P.S.</h2>
 
 <p>At first, I used a very large exported image for backgroundImageView. And because image by default was quite large, it then forced cell to be larger:</p>
 
