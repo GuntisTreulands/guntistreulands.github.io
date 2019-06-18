@@ -395,16 +395,32 @@ footer {
 
 img[src~="bordered"] {
   border: 1px solid #c2c2c2;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 img[src~="bordered-screenshots"] {
   border: 1px solid #c2c2c2;
-  width: 50%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 img[src~="thumbnail"] {
   width: 150px;
   height: 100px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .highlight {

@@ -60,11 +60,13 @@
   <div class="entry">
     <h2 id="requirement">Requirement</h2>
 
-<p><img src="/assets/2019-6-18-sketch-requirement.png# bordered" alt="Pic" /></p>
+<p>Task was to create a custom table view cell, based on a sketch:</p>
+
+<p><img srcset="/assets/2019-6-18-sketch-requirement.png 2x" /></p>
 
 <p>I decided to use a custom UITableViewCell. I also created a xib file, to lay out the UI part:</p>
 
-<p><img src="/assets/2019-6-18-xib-setup.png# bordered" alt="Pic" /></p>
+<p><img srcset="/assets/2019-6-18-xib-setup.png 2x" /></p>
 
 <p>I wanted to try out NSLayoutAnchor’s, as I’ve never used them before. And I implemented them in code.
 <br /><br /></p>
@@ -138,17 +140,17 @@ priceLabel.<span class="property">bottomAnchor</span>.<span class="call">constra
 
 <p>And the final result:</p>
 
-<p><img src="/assets/2019-6-18-result-simulator.png# bordered-screenshots" alt="Pic" /></p>
+<p><img srcset="/assets/2019-6-18-result-simulator.png 2x" /></p>
 
 <h2 id="ps">P.S.</h2>
 
 <p>At first, I used a very large exported image for backgroundImageView. And because image by default was quite large, it then forced cell to be larger:</p>
 
-<p><img src="/assets/2019-6-18-problematic-result-simulator.png# bordered-screenshots" alt="Pic" /></p>
+<p><img srcset="/assets/2019-6-18-problematic-result-simulator.png 2x" /></p>
 
 <p>And the solution was simply to export a minimal size image for backgroundImageView (which then could be sliced):</p>
 
-<p><img src="/assets/2019-6-18-tiny-bg.png# bordered" alt="Pic" /></p>
+<p><img srcset="/assets/2019-6-18-tiny-bg.png 2x" /></p>
 
   </div>
 
