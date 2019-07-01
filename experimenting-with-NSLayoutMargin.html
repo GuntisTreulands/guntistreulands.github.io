@@ -102,8 +102,8 @@ box1.<span class="property">centerYAnchor</span>.<span class="call">constraint</
 box2.<span class="property">centerYAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">centerYAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 
 <span class="comment">// And position boxes</span>
-box1.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">leftAnchor</span>, constant: <span class="number">0</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
-box2.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">rightAnchor</span>, constant: <span class="number">0</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box1.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">leftAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">rightAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 </code></pre>
 
 <p>Which gives us:<br />
@@ -167,12 +167,12 @@ box2.<span class="property">centerYAnchor</span>.<span class="call">constraint</
 
 <span class="comment">// Position boxes with spacers. Notice that we don't provide space2 anchors,
 // because it's anchors are set by box1 and box2.</span>
-space1.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">leftAnchor</span>, constant: <span class="number">0</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
-box1.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: space1.<span class="property">rightAnchor</span>, constant: <span class="number">0</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
-box1.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: space2.<span class="property">leftAnchor</span>, constant: <span class="number">0</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
-box2.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: space2.<span class="property">rightAnchor</span>, constant: <span class="number">0</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
-box2.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: space3.<span class="property">leftAnchor</span>, constant: <span class="number">0</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
-space3.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">rightAnchor</span>, constant: <span class="number">0</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+space1.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">leftAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box1.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: space1.<span class="property">rightAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box1.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: space2.<span class="property">leftAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: space2.<span class="property">rightAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: space3.<span class="property">leftAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+space3.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">rightAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 </code></pre>
 
 <p>Which gives us:<br />
@@ -238,12 +238,12 @@ box2.<span class="property">centerYAnchor</span>.<span class="call">constraint</
 
 <span class="comment">// Position boxes with spacers. Notice that we don't provide space2 anchors,
 // because it's anchors are set by box1 and box2.</span>
-space1.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">leftAnchor</span>, constant: <span class="number">0</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
-box1.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: space1.<span class="property">rightAnchor</span>, constant: <span class="number">0</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
-box1.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: space2.<span class="property">leftAnchor</span>, constant: <span class="number">0</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
-box2.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: space2.<span class="property">rightAnchor</span>, constant: <span class="number">0</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
-box2.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: space3.<span class="property">leftAnchor</span>, constant: <span class="number">0</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
-space3.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">rightAnchor</span>, constant: <span class="number">0</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+space1.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">leftAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box1.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: space1.<span class="property">rightAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box1.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: space2.<span class="property">leftAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: space2.<span class="property">rightAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: space3.<span class="property">leftAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+space3.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">rightAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 </code></pre>
 
 <p>Which gives us:<br />
