@@ -832,13 +832,13 @@ code {
  */
 pre {
   margin-bottom: 1.5em;
-  background-color: #f3f3f3;
+  background-color: #f5f5f3;
   padding: 16px 0;
   border-radius: 16px;
 }
 
 pre code {
-  background-color: #f3f3f3;
+  background-color: whitesmoke;
   font-family: monospace;
   display: block;
   padding: 0 20px;
@@ -858,11 +858,11 @@ pre code .type {
 }
 
 pre code .call {
-  color: #2E0D6E;
+  color: #3d1e81;
 }
 
 pre code .property {
-  color: #26474B;
+  color: #8357b5;
 }
 
 pre code .number {
@@ -878,7 +878,7 @@ pre code .comment {
 }
 
 pre code .dotAccess {
-  color: #92b300;
+  color: #8357b5;
 }
 
 pre code .preprocessing {
