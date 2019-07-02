@@ -72,13 +72,13 @@
 <p>This is how easy it is to position two elements on opposite sides.</p>
 
 <pre class="splash"><code><span class="comment">// Create box 1</span>
-<span class="keyword">let</span> box1 = <span class="type">UIView</span>.<span class="call">init</span>()
+<span class="keyword">let</span> box1 = <span class="type">UIView</span>()
 box1.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
 box1.<span class="property">backgroundColor</span> = .<span class="dotAccess">red</span>
 <span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addSubview</span>(box1)
 
 <span class="comment">// Create box 2</span>
-<span class="keyword">let</span> box2 = <span class="type">UIView</span>.<span class="call">init</span>()
+<span class="keyword">let</span> box2 = <span class="type">UIView</span>()
 box2.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
 box2.<span class="property">backgroundColor</span> = .<span class="dotAccess">blue</span>
 <span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addSubview</span>(box2)
@@ -116,13 +116,13 @@ box2.<span class="property">rightAnchor</span>.<span class="call">constraint</sp
 <p>In case we need to center both objects, within a layout guide, we can use multiple layout guides, as spacers.</p>
 
 <pre class="splash"><code><span class="comment">// Create box 1</span>
-<span class="keyword">let</span> box1 = <span class="type">UIView</span>.<span class="call">init</span>()
+<span class="keyword">let</span> box1 = <span class="type">UIView</span>()
 box1.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
 box1.<span class="property">backgroundColor</span> = .<span class="dotAccess">red</span>
 <span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addSubview</span>(box1)
 
 <span class="comment">// Create box 2</span>
-<span class="keyword">let</span> box2 = <span class="type">UIView</span>.<span class="call">init</span>()
+<span class="keyword">let</span> box2 = <span class="type">UIView</span>()
 box2.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
 box2.<span class="property">backgroundColor</span> = .<span class="dotAccess">blue</span>
 <span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addSubview</span>(box2)
@@ -186,13 +186,13 @@ space3.<span class="property">rightAnchor</span>.<span class="call">constraint</
 Simply provide multiplier, when setting spacer width!</p>
 
 <pre class="splash"><code><span class="comment">// Create box 1</span>
-<span class="keyword">let</span> box1 = <span class="type">UIView</span>.<span class="call">init</span>()
+<span class="keyword">let</span> box1 = <span class="type">UIView</span>()
 box1.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
 box1.<span class="property">backgroundColor</span> = .<span class="dotAccess">red</span>
 <span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addSubview</span>(box1)
 
 <span class="comment">// Create box 2</span>
-<span class="keyword">let</span> box2 = <span class="type">UIView</span>.<span class="call">init</span>()
+<span class="keyword">let</span> box2 = <span class="type">UIView</span>()
 box2.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
 box2.<span class="property">backgroundColor</span> = .<span class="dotAccess">blue</span>
 <span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addSubview</span>(box2)
@@ -273,6 +273,9 @@ space3.<span class="property">rightAnchor</span>.<span class="call">constraint</
 <pre class="splash"><code>guide.<span class="property">heightAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">100</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 space1.<span class="property">heightAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">20</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 </code></pre>
+
+<p><a href="/assets/2019-7-1-uilayoutguide.playground">Playground file with the experiments</a></p>
+
 
   </div>
 
