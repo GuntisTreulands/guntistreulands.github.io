@@ -60,12 +60,12 @@
   <div class="entry">
     <h2 id="requirement">Requirement</h2>
 
-<p>We have a design requirement to build a tableview with custom cells. Each section is supposed to be like a “box” with a ridicilous shadow on all sides. No problem! - we think to ourselves. But then we realise, that it can get messy pretty easy. There are 4 types of background images and depending on type, we might need to adjust cell height, to compensate for shadow.
+<p>We have a design requirement to build a tableview with custom cells. Each section is supposed to be like a “box” with a ridiculous shadow on all sides. No problem! - we think to ourselves. But then we realise, that it can get messy pretty easy. There are 4 types of background images and depending on type, we might need to adjust cell height, to compensate for shadow.
 <img srcset="/assets/2019-7-10-requirement-cells.png 2x" /></p>
 
 <h2 id="solution">Solution</h2>
 
-<p>First we need to export 4 types of background images, for all cell types.</p>
+<p>First we need to export background images, for all cell types.</p>
 
 <p><img srcset="/assets/2019-7-10-imported_images.png 2x" /></p>
 
@@ -115,7 +115,7 @@
         titleLabel.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: iconImageView.<span class="property">rightAnchor</span>, constant: <span class="number">10</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
         titleLabel.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: backgroundImageView.<span class="property">rightAnchor</span>, constant: -<span class="number">10</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 		
-        descriptionLabel.<span class="property">topAnchor</span>.<span class="call">constraint</span>(equalTo: titleLabel.<span class="property">bottomAnchor</span>, constant: <span class="number">0</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+        descriptionLabel.<span class="property">topAnchor</span>.<span class="call">constraint</span>(equalTo: titleLabel.<span class="property">bottomAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
         descriptionLabel.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: iconImageView.<span class="property">rightAnchor</span>, constant: <span class="number">10</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
         descriptionLabel.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: backgroundImageView.<span class="property">rightAnchor</span>, constant: -<span class="number">10</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
         descriptionLabel.<span class="property">bottomAnchor</span>.<span class="call">constraint</span>(equalTo: backgroundImageView.<span class="property">bottomAnchor</span>, constant: -<span class="number">5</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
@@ -164,7 +164,8 @@
 
 <p>So, what’s left is - just add offset for <code class="highlight">backgroundImageView</code>, so that we can see shadows!
 To do it, we just need to add left/right constant offset:</p>
-<pre class="splash"><code><span class="comment">//We use 30, because shadow is 57 for @2x. So, it would be 28.5 pixels, to see whole shadow on both sides</span>
+<pre class="splash"><code><span class="comment">// We use 28.5, because shadow is 57 for @2x. 
+// So, it would be 28.5 pixels, to see whole shadow on both sides</span>
 backgroundImageView.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: leftAnchor, constant: <span class="number">28.5</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 backgroundImageView.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: rightAnchor, constant: -<span class="number">28.5</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 </code></pre>
