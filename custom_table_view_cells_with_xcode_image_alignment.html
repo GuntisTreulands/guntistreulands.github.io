@@ -174,9 +174,9 @@ backgroundImageView.<span class="property">rightAnchor</span>.<span class="call"
 <pre class="splash"><code><span class="keyword">var</span> bgViewBottomAnchorConstraint: <span class="type">NSLayoutConstraint</span>?
 <span class="keyword">var</span> bgViewTopAnchorConstraint: <span class="type">NSLayoutConstraint</span>?
 	
-bgViewBottomAnchorConstraint = backgroundImageView.<span class="property">bottomAnchor</span>.<span class="call">constraint</span>(equalTo: contentView.<span class="property">bottomAnchor</span>)
+bgViewBottomAnchorConstraint = backgroundImageView.<span class="property">bottomAnchor</span>.<span class="call">constraint</span>(equalTo: bottomAnchor)
 bgViewBottomAnchorConstraint?.<span class="property">isActive</span> = <span class="keyword">true</span>
-bgViewTopAnchorConstraint = backgroundImageView.<span class="property">topAnchor</span>.<span class="call">constraint</span>(equalTo: contentView.<span class="property">topAnchor</span>)
+bgViewTopAnchorConstraint = backgroundImageView.<span class="property">topAnchor</span>.<span class="call">constraint</span>(equalTo: topAnchor)
 bgViewTopAnchorConstraint?.<span class="property">isActive</span> = <span class="keyword">true</span>
 </code></pre>
 
