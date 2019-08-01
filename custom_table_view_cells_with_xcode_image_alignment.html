@@ -75,7 +75,7 @@
 
 <p>For the actual cell, we will use custom class with .xib.  In the .xib file, we put all the items but we will position them from code, using <code class="highlight">NSLayoutAnchors</code>.</p>
 
-<pre class="splash"><code><span class="keyword">enum</span> cellBackgroundType: <span class="type">Int</span> {
+<pre class="splash"><code><span class="keyword">enum</span> CellBackgroundType: <span class="type">Int</span> {
 	<span class="keyword">case</span> top = <span class="number">0</span>
 	<span class="keyword">case</span> middle = <span class="number">1</span>
 	<span class="keyword">case</span> bottom = <span class="number">2</span>
@@ -84,7 +84,7 @@
 
 <span class="keyword">class</span> KazooTableViewCell: <span class="type">UITableViewCell</span> {
 
-    <span class="keyword">public var</span> cellBgType: cellBackgroundType = .<span class="dotAccess">single</span>
+    <span class="keyword">public var</span> cellBgType: <span class="type">CellBackgroundType</span> = .<span class="dotAccess">single</span>
 	
     <span class="keyword">@IBOutlet weak var</span> backgroundImageView: <span class="type">UIImageView</span>!
     <span class="keyword">@IBOutlet weak var</span> iconImageView: <span class="type">UIImageView</span>!
@@ -122,18 +122,15 @@
     }
     
     <span class="comment">// Using this function, we can set apropriate cell type, and change background image.</span>
-    <span class="keyword">func</span> setAsCellType(cellType: cellBackgroundType) {
+    <span class="keyword">func</span> setAsCellType(cellType: <span class="type">CellBackgroundType</span>) {
         <span class="keyword">switch</span> cellType {
             <span class="keyword">case</span> .<span class="dotAccess">top</span>:
                 backgroundImageView.<span class="property">image</span> = <span class="type">UIImage</span>.<span class="call">init</span>(named: <span class="string">"cell_bg_top"</span>)
-                <span class="keyword">break
-            case</span> .<span class="dotAccess">bottom</span>:
+            <span class="keyword">case</span> .<span class="dotAccess">bottom</span>:
                 backgroundImageView.<span class="property">image</span> = <span class="type">UIImage</span>.<span class="call">init</span>(named: <span class="string">"cell_bg_bottom"</span>)
-                <span class="keyword">break
-            case</span> .<span class="dotAccess">middle</span>:
+            <span class="keyword">case</span> .<span class="dotAccess">middle</span>:
                 backgroundImageView.<span class="property">image</span> = <span class="type">UIImage</span>.<span class="call">init</span>(named: <span class="string">"cell_bg_middle"</span>)
-                <span class="keyword">break
-            case</span> .<span class="dotAccess">single</span>:
+            <span class="keyword">case</span> .<span class="dotAccess">single</span>:
                 backgroundImageView.<span class="property">image</span> = <span class="type">UIImage</span>.<span class="call">init</span>(named: <span class="string">"cell_bg_single"</span>)
 		}
 	}
@@ -188,18 +185,15 @@ bgViewTopAnchorConstraint?.<span class="property">isActive</span> = <span class=
             <span class="keyword">self</span>.<span class="property">bgViewTopAnchorConstraint</span>?.<span class="property">constant</span> = <span class="number">28.5</span>
             <span class="keyword">self</span>.<span class="property">bgViewBottomAnchorConstraint</span>?.<span class="property">constant</span> = <span class="number">0</span>
             backgroundImageView.<span class="property">image</span> = <span class="type">UIImage</span>.<span class="call">init</span>(named: <span class="string">"cell_bg_top"</span>)
-            <span class="keyword">break
-        case</span> .<span class="dotAccess">bottom</span>:
+        <span class="keyword">case</span> .<span class="dotAccess">bottom</span>:
             <span class="keyword">self</span>.<span class="property">bgViewTopAnchorConstraint</span>?.<span class="property">constant</span> = <span class="number">0</span>
             <span class="keyword">self</span>.<span class="property">bgViewBottomAnchorConstraint</span>?.<span class="property">constant</span> = -<span class="number">28.5</span>
             backgroundImageView.<span class="property">image</span> = <span class="type">UIImage</span>.<span class="call">init</span>(named: <span class="string">"cell_bg_bottom"</span>)
-            <span class="keyword">break
-        case</span> .<span class="dotAccess">middle</span>:
+        <span class="keyword">case</span> .<span class="dotAccess">middle</span>:
             <span class="keyword">self</span>.<span class="property">bgViewTopAnchorConstraint</span>?.<span class="property">constant</span> = <span class="number">0</span>
             <span class="keyword">self</span>.<span class="property">bgViewBottomAnchorConstraint</span>?.<span class="property">constant</span> = <span class="number">0</span>
             backgroundImageView.<span class="property">image</span> = <span class="type">UIImage</span>.<span class="call">init</span>(named: <span class="string">"cell_bg_middle"</span>)
-            <span class="keyword">break
-        case</span> .<span class="dotAccess">single</span>:
+        <span class="keyword">case</span> .<span class="dotAccess">single</span>:
             <span class="keyword">self</span>.<span class="property">bgViewTopAnchorConstraint</span>?.<span class="property">constant</span> = <span class="number">28.5</span>
             <span class="keyword">self</span>.<span class="property">bgViewBottomAnchorConstraint</span>?.<span class="property">constant</span> = -<span class="number">28.5</span>
             backgroundImageView.<span class="property">image</span> = <span class="type">UIImage</span>.<span class="call">init</span>(named: <span class="string">"cell_bg_single"</span>)
