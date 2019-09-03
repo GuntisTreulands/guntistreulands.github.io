@@ -71,6 +71,9 @@
 <h6 id="1-opposite-sides">1.) Opposite sides</h6>
 <p>This is how easy it is to position two elements on opposite sides.</p>
 
+<center><i>(black frame is just to mark guide frame)</i></center>
+<p><img srcset="/assets/2019-7-1-layout-margin-example-1.png 2x" aa="" /></p>
+
 <pre class="splash"><code><span class="comment">// Create box 1</span>
 <span class="keyword">let</span> box1 = <span class="type">UIView</span>()
 box1.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
@@ -105,18 +108,14 @@ box2.<span class="property">centerYAnchor</span>.<span class="call">constraint</
 box1.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">leftAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 box2.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">rightAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
 </code></pre>
-
-<p>Which gives us:<br />
-<em>(black frame is just to mark guide frame)</em></p>
-
-<p><img srcset="/assets/2019-7-1-layout-margin-example-1.png 2x" /></p>
+<p><br /></p>
 
 <h6 id="2-spacers">2.) Spacers</h6>
 
 <p>In case we need to center both objects, within a layout guide, we can use multiple layout guides, as spacers.</p>
 
-<p><em>(black frame is just to mark guide frames)</em> 
-<img srcset="/assets/2019-7-1-layout-margin-example-2.png 2x" /></p>
+<center><i>(black frame is just to mark guide frame)</i></center>
+<p><img srcset="/assets/2019-7-1-layout-margin-example-2.png 2x" /></p>
 
 <pre class="splash"><code><span class="comment">// Create box 1</span>
 <span class="keyword">let</span> box1 = <span class="type">UIView</span>()
@@ -184,8 +183,8 @@ space3.<span class="property">rightAnchor</span>.<span class="call">constraint</
 <p>What if we want different size spacers? No problem!
 Simply provide multiplier, when setting spacer width!</p>
 
-<p><em>(black frame is just to mark guide frames)</em> 
-<img srcset="/assets/2019-7-1-layout-margin-example-3.png 2x" /></p>
+<center><i>(black frame is just to mark guide frame)</i></center>
+<p><img srcset="/assets/2019-7-1-layout-margin-example-3.png 2x" /></p>
 
 <pre class="splash"><code><span class="comment">// Create box 1</span>
 <span class="keyword">let</span> box1 = <span class="type">UIView</span>()
@@ -253,8 +252,8 @@ space3.<span class="property">rightAnchor</span>.<span class="call">constraint</
 
 <p>What if we have 2 objects that are different width, but center them both (so that on left and right side it would have same space) ?</p>
 
-<p><em>(black frame is just to mark guide frames)</em> 
-<img srcset="/assets/2019-7-1-layout-margin-example-4.png 2x" /></p>
+<center><i>(black frame is just to mark guide frame)</i></center>
+<p><img srcset="/assets/2019-7-1-layout-margin-example-4.png 2x" /></p>
 
 <pre class="splash"><code><span class="comment">// Create box 1</span>
 <span class="keyword">let</span> box1 = <span class="type">UIView</span>()
