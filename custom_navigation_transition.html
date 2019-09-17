@@ -141,10 +141,14 @@ Then you can simply make any transformations you want, by positioning them and t
 
 <p>For the final step (transforming the reusable view into a different layout) I created a new view - <code class="highlight">expandedView</code>, that ads our reusable view as a subview. Then just enable/disable necessary layout constraints and constants - to switch between collapsed and expanded type.</p>
 
-<p>For the expanded view - all the “cell” elements (except imageView) are faded out, and only image view is just transformed which will give use the feeling of “layout transformation”, instead of just view switching.</p>
+<p><img srcset="/assets/2019-9-11-target_middle_animation.gif" /></p>
+
+<p>At this point - our expanded “cell” is expanding/collapsing, but the initial “cell” should also be adjusted - all elements of the “cell” (except imageView) should be faded out, and only image view should be just transformed which will give use the feeling of “layout transformation”.</p>
 
 <p><img srcset="/assets/2019-9-11-slow_animation.gif" />
 <br /></p>
+
+<p>Annd… Done!</p>
 
 <h2 id="code">Code</h2>
 
