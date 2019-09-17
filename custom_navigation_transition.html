@@ -249,8 +249,8 @@ Then you can simply make any transformations you want, by positioning them and t
     	context = transitionContext
 
         <span class="keyword">guard let</span> fromView = transitionContext.<span class="call">view</span>(forKey: .<span class="dotAccess">from</span>),
-			 <span class="keyword">let</span> toView = transitionContext.<span class="call">view</span>(forKey: .<span class="dotAccess">to</span>),
-			 <span class="keyword">let</span> toViewController = transitionContext.<span class="call">viewController</span>(forKey: .<span class="dotAccess">to</span>) <span class="keyword">as</span>? <span class="type">PushTransitionAnimatorHelperProtocol</span>  <span class="keyword">else</span> { <span class="keyword">return</span> }
+            <span class="keyword">let</span> toView = transitionContext.<span class="call">view</span>(forKey: .<span class="dotAccess">to</span>),
+            <span class="keyword">let</span> toViewController = transitionContext.<span class="call">viewController</span>(forKey: .<span class="dotAccess">to</span>) <span class="keyword">as</span>? <span class="type">PushTransitionAnimatorHelperProtocol</span>  <span class="keyword">else</span> { <span class="keyword">return</span> }
 
         <span class="comment">// Get the duration, that was declared in transitionDuration()</span>
         <span class="keyword">let</span> duration = <span class="call">transitionDuration</span>(using: transitionContext)
@@ -318,9 +318,9 @@ In my case, I use this method to unhide UITableViewCell which was tapped.</p>
         context = transitionContext
     
         <span class="keyword">guard let</span> fromView = transitionContext.<span class="call">view</span>(forKey: .<span class="dotAccess">from</span>),
-			 <span class="keyword">let</span> toView = transitionContext.<span class="call">view</span>(forKey: .<span class="dotAccess">to</span>),
-			 <span class="keyword">let</span> toViewController = transitionContext.<span class="call">viewController</span>(forKey: .<span class="dotAccess">to</span>) <span class="keyword">as</span>? <span class="type">PopTransitionAnimatorFinaliseHelperProtocol</span>,
-			 <span class="keyword">let</span> fromViewController = transitionContext.<span class="call">viewController</span>(forKey: .<span class="dotAccess">from</span>) <span class="keyword">as</span>? <span class="type">PopTransitionAnimatorHelperProtocol</span> <span class="keyword">else</span> { <span class="keyword">return</span> }
+            <span class="keyword">let</span> toView = transitionContext.<span class="call">view</span>(forKey: .<span class="dotAccess">to</span>),
+            <span class="keyword">let</span> toViewController = transitionContext.<span class="call">viewController</span>(forKey: .<span class="dotAccess">to</span>) <span class="keyword">as</span>? <span class="type">PopTransitionAnimatorFinaliseHelperProtocol</span>,
+            <span class="keyword">let</span> fromViewController = transitionContext.<span class="call">viewController</span>(forKey: .<span class="dotAccess">from</span>) <span class="keyword">as</span>? <span class="type">PopTransitionAnimatorHelperProtocol</span> <span class="keyword">else</span> { <span class="keyword">return</span> }
 
         <span class="keyword">self</span>.<span class="property">fromViewController</span> = fromViewController
 
