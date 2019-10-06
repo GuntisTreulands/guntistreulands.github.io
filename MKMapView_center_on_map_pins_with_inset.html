@@ -78,11 +78,11 @@
   <li>Declare helper variables (to store our custom map annotations width/height)</li>
   <li>When adding annotations to map, calculate those helper variables</li>
   <li>When user drags Info view - adjust it’s topAnchor constraint’s constant</li>
-  <li>Recenter map on pins</li>
+  <li>Recenter map on annotations</li>
 </ol>
 
 <p><br />
-<b>1. Info view top anchor constraint</b> 
+<b>1. Store topAnchor constraint for Info view</b> 
 <br />We set up our <code class="highlight">UIViewController</code>: add <code class="highlight">MKMapView</code> and our draggable info pop up <code class="highlight">UIView</code>. We set up constraints, but the main thing here is - to have the top anchor constraint (y offset) for our info view - stored as an outlet in our class file.</p>
 
 <p><img srcset="/assets/2019-10-6-storyboard_stuff.png 2x" /></p>
@@ -98,7 +98,7 @@
 <span class="keyword">var</span> calculatedMaxPinHeight: <span class="type">CGFloat</span> = <span class="number">0</span>
 </code></pre>
 
-<p><b>3. Calculate annotation view size variables</b> 
+<p><b>3. When adding annotations to map, calculate those helper variables</b> 
 <br />When we provide a custom view for our annotations, we also update our <code class="highlight">calculatedMaxPinWidth</code> and <code class="highlight">calculatedMaxPinHeight</code> :</p>
 
 <pre class="splash"><code><span class="keyword">func</span> mapView(<span class="keyword">_</span> mapView: <span class="type">MKMapView</span>, viewFor annotation: <span class="type">MKAnnotation</span>) -&gt; <span class="type">MKAnnotationView</span>? {
@@ -137,7 +137,7 @@
 }
 </code></pre>
 
-<p><b>4. Adjust InfoView top-anchor constraint’s constant</b> 
+<p><b>4. When user drags Info view - adjust it’s topAnchor constraint’s constant</b> 
 <br />If we have some <code class="highlight">UIPanGestureRecognizer</code> added to the info view, which would call <code class="highlight">draggedView()</code> whenever we do dragging, we would simply update the <code class="highlight">top anchor (yOffset)</code> constraint for info view (to move it).</p>
 
 <pre class="splash"><code><span class="keyword">@objc func</span> draggedView() {
