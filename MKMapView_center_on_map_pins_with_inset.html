@@ -96,7 +96,7 @@
 
     <span class="keyword">let</span> identifier = <span class="string">"mapPoint"</span>
 
-    <span class="keyword">var</span> annotationView: <span class="type">MKAnnotationView</span>?
+    <span class="keyword">var</span> annotationView: <span class="type">MKAnnotationView</span>!
     <span class="keyword">if let</span> dequeuedAnnotationView = mapView.<span class="call">dequeueReusableAnnotationView</span>(withIdentifier: identifier) {
         annotationView = dequeuedAnnotationView
         annotationView?.<span class="property">annotation</span> = annotation
@@ -106,8 +106,7 @@
         annotationView = av
     }
 
-    <span class="keyword">if let</span> annotationView = annotationView,
-       <span class="keyword">let</span> mapPointAnnotation = annotationView.<span class="property">annotation</span> <span class="keyword">as</span>? <span class="type">MapPoint</span> {
+    <span class="keyword">if let</span> mapPointAnnotation = annotationView.<span class="property">annotation</span> <span class="keyword">as</span>? <span class="type">MapPoint</span> {
         <span class="keyword">let</span> mapPinAccessory = <span class="type">MapPinAccessoryView</span>.<span class="call">init</span>()
         mapPinAccessory.<span class="property">icon</span>.<span class="property">image</span> = <span class="type">UIImage</span>(named: mapPointAnnotation.<span class="property">imageName</span>)
         mapPinAccessory.<span class="property">titleLabel</span>.<span class="property">text</span> = mapPointAnnotation.<span class="property">title</span>
