@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>MKMapView center on map pins with inset – Guntis Treulands – Blog about swift coding</title>
+    <title>MKMapView center on map annotations with inset – Guntis Treulands – Blog about swift coding</title>
 
         <meta charset="utf-8" />
     <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
@@ -9,14 +9,14 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
 
     
-    <meta name="description" content="Imagine you had an info view, that you drag over a map. How would you still keep the map pins centered in the remaining visible area?" />
-    <meta property="og:description" content="Imagine you had an info view, that you drag over a map. How would you still keep the map pins centered in the remaining visible area?" />
+    <meta name="description" content="Imagine that you had an info view, which you can drag over a map. How would you still keep the map annotations centered in the remaining visible area?" />
+    <meta property="og:description" content="Imagine that you had an info view, which you can drag over a map. How would you still keep the map annotations centered in the remaining visible area?" />
     
     <meta name="author" content="Guntis Treulands" />
 
     
-    <meta property="og:title" content="MKMapView center on map pins with inset" />
-    <meta property="twitter:title" content="MKMapView center on map pins with inset" />
+    <meta property="og:title" content="MKMapView center on map annotations with inset" />
+    <meta property="twitter:title" content="MKMapView center on map annotations with inset" />
     
 
     <!--[if lt IE 9]>
@@ -53,16 +53,16 @@
       <center><z class="date">October  6, 2019</z></center>
 
 <article class="post">
-  <center><h1>MKMapView center on map pins with inset</h1></center>
+  <center><h1>MKMapView center on map annotations with inset</h1></center>
   
   <center><z class="excerpt">2 minutes read</z></center>
   <br> <br> <br>
   <div class="entry">
     <h2 id="requirement">Requirement</h2>
 
-<p>We need to show some pins on our map view and zoom in just enough, to be able to see all of the pins.</p>
+<p>We need to show some annotations on our map view and zoom in just enough, to be able to see all of the annotations.</p>
 
-<p>The catch is - we also have an overlay view, that user can drag to reveal some information. When that happens - it would be nice, if map would adjust re-center and re-zoom on pins as dragging happens.</p>
+<p>The catch is - we also have an overlay view, that user can drag to reveal some information. When that happens - it would be nice, if map would adjust re-center and re-zoom on annotations as dragging happens.</p>
 
 <p><img srcset="/assets/2019-10-6-preview_of_requirement.gif 1x" /></p>
 
@@ -77,7 +77,7 @@
 <p><img srcset="/assets/2019-10-6-storyboard_stuff.png 2x" /></p>
 
 <p><b>2. Declare helper variables</b> 
-<br />We also need to declare some variables to assist us in better zooming on our pins. We need these to have some extra space from sides, top and bottom. Because by default - when pins region is calculated, it considers only the exact points, so if a pin would be on a border, it’s annoation view would be cut in the middle.</p>
+<br />We also need to declare some variables to assist us in better zooming on our annotations. We need these to have some extra space from sides, top and bottom. Because by default - when annotations region is calculated, it considers only the exact points, so if an annotation would be on a border, it’s annoation view would be cut in the middle.</p>
 
 <p><img srcset="/assets/2019-10-6-half_visible_pins.png 3x" /></p>
 
@@ -131,20 +131,20 @@
 <pre class="splash"><code><span class="keyword">@objc func</span> draggedView() {
     <span class="keyword">let</span> translation = panGesture.<span class="call">translation</span>(in: <span class="keyword">self</span>.<span class="property">view</span>)
     
-    <span class="comment">// this way we force that user can't drag higher than actual pin height</span>
+    <span class="comment">// this way we force that user can't drag higher than actual annotation height</span>
     yOffset.<span class="property">constant</span> = <span class="call">max</span>(calculatedMaxPinHeight, yOffset.<span class="property">constant</span> + translation.<span class="property">y</span>)
     panGesture.<span class="call">setTranslation</span>(<span class="type">CGPoint</span>.<span class="property">zero</span>, in: <span class="keyword">self</span>.<span class="property">view</span>)
 
-    <span class="call">recenterMapPins</span>()
+    <span class="call">recenterMapAnnotations</span>()
 }
 </code></pre>
 
-<p><b>5. Recenter map pins</b> 
-<br />When user drags the info view, we call <code class="highlight">setVisibleMapRect</code> on map view, providing visible pins map rectangle and our recalculated edge insets:</p>
+<p><b>5. Recenter map on annotations</b> 
+<br />When user drags the info view, we call <code class="highlight">setVisibleMapRect</code> on map view, providing map rectangle for all annotations and our recalculated edge insets:</p>
 
-<pre class="splash"><code><span class="keyword">func</span> recenterMapPins() {
+<pre class="splash"><code><span class="keyword">func</span> recenterMapAnnotations() {
     <span class="keyword">let</span> region = <span class="keyword">self</span>.<span class="call">regionFor</span>(mapPoints: mapView.<span class="property">annotations</span> <span class="keyword">as</span>! [<span class="type">MapPoint</span>])
-    <span class="keyword">let</span> visiblePinsMapRect = <span class="type">MKMapRectForCoordinateRegion</span>(region: region)
+    <span class="keyword">let</span> visibleAnnotationsMapRect = <span class="type">MKMapRectForCoordinateRegion</span>(region: region)
 		
     <span class="comment">// 5 is used as an extra space from sides</span>
 		
@@ -152,7 +152,7 @@
     <span class="keyword">let</span> bottom = mapView.<span class="property">frame</span>.<span class="property">height</span> - yOffset.<span class="property">constant</span> - <span class="keyword">self</span>.<span class="property">view</span>.<span class="property">safeAreaInsets</span>.<span class="property">bottom</span> + <span class="number">5</span>
     <span class="keyword">let</span> side = calculatedMaxPinWidth/<span class="number">2</span> + <span class="number">5</span>
 
-    mapView.<span class="call">setVisibleMapRect</span>(visiblePinsMapRect, edgePadding: 
+    mapView.<span class="call">setVisibleMapRect</span>(visibleAnnotationsMapRect, edgePadding: 
         <span class="type">UIEdgeInsets</span>(top: top, left: side, bottom: bottom, right: side), animated: <span class="keyword">false</span>)
 }
 </code></pre>
@@ -249,7 +249,7 @@
 		ga('create', 'UA-143179417-1', 'auto');
 		ga('send', 'pageview', {
 		  'page': '/MKMapView_center_on_map_pins_with_inset.html',
-		  'title': 'MKMapView center on map pins with inset'
+		  'title': 'MKMapView center on map annotations with inset'
 		});
 	</script>
 	<!-- End Google Analytics -->
