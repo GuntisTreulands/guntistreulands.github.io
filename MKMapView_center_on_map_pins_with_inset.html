@@ -125,7 +125,7 @@
 }
 </code></pre>
 
-<p><b>4. Adjust constant for Info view top anchor constraint</b> 
+<p><b>4. Adjust InfoView top-anchor constraint’s constant</b> 
 <br />If we have some <code class="highlight">UIPanGestureRecognizer</code> added to the info view, which would call <code class="highlight">draggedView()</code> whenever we do dragging, we would simply update the <code class="highlight">top anchor (yOffset)</code> constraint for info view (to move it).</p>
 
 <pre class="splash"><code><span class="keyword">@objc func</span> draggedView() {
