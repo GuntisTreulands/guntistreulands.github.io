@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MKMapView center on map pins with inset – Guntis Treulands – Blog about swift coding</title>
+
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+    
+    <meta name="description" content="Imagine you had an info view, that you drag over a map. How would you still keep the map pins centered in the remaining visible area?" />
+    <meta property="og:description" content="Imagine you had an info view, that you drag over a map. How would you still keep the map pins centered in the remaining visible area?" />
+    
+    <meta name="author" content="Guntis Treulands" />
+
+    
+    <meta property="og:title" content="MKMapView center on map pins with inset" />
+    <meta property="twitter:title" content="MKMapView center on map pins with inset" />
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="Guntis Treulands - Blog about swift coding" href="/feed.xml" />
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+  </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <!-- <a href="/" class="site-avatar"><img src="http://static1.squarespace.com/static/558def25e4b0fc259f066636/5a49786bf9619ae3bb6a2564/5b68eeacaa4a99da3bcdc610/1545107487365/Swift_logo.png" /></a> -->
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="/">Guntis Treulands</a></h1>
+            <p class="site-description">Blog about swift coding</p>
+          </div>
+
+           <nav>
+            <!-- <a href="/swift">Swift</a> -->
+            <!-- <a href="/experiments">Experiments</a> -->
+            <a href="/about">About</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <center><z class="date">October  6, 2019</z></center>
+
+<article class="post">
+  <center><h1>MKMapView center on map pins with inset</h1></center>
+  
+  <center><z class="excerpt">2 minutes read</z></center>
+  <br> <br> <br>
+  <div class="entry">
+    <h2 id="requirement">Requirement</h2>
+
+<p>We need to show some pins on our map view and zoom in just enough, to be able to see all of the pins.</p>
+
+<p>The catch is - we also have an overlay view, that user can drag to reveal some information. When that happens - it would be nice, if map would adjust re-center and re-zoom on pins as dragging happens.</p>
+
+<p><img srcset="/assets/2019-10-6-preview_of_requirement.gif 1x" /></p>
+
+<p>One possible solution would be to simply adjust map’s constraints (map.bottom being the top of the info view). But then we cannot have a nice effect of having the pop-up overlay only partly above the map (to see the map on pop up sides).</p>
+
+<h2 id="solution">Solution</h2>
+<p>Lucky for us, MKMapView provides us with just the thing we are looking for -  <br /><code class="highlight">setVisibleMapRect(_ mapRect: , edgePadding insets: , animated animate: )</code></p>
+
+<p><b>1. Info view top anchor constraint</b> 
+<br />We set up our <code class="highlight">UIViewController</code>: add <code class="highlight">MKMapView</code> and our draggable info pop up <code class="highlight">UIView</code>. We set up constraints, but the main thing here is - to have the top anchor constraint (y offset) for our info view - stored as an outlet in our class file.</p>
+
+<p><img srcset="/assets/2019-10-6-storyboard_stuff.png 2x" /></p>
+
+<p><b>2. Declare helper variables</b> 
+<br />We also need to declare some variables to assist us in better zooming on our pins. We need these to have some extra space from sides, top and bottom. Because by default - when pins region is calculated, it considers only the exact points, so if a pin would be on a border, it’s annoation view would be cut in the middle.</p>
+
+<p><img srcset="/assets/2019-10-6-half_visible_pins.png 3x" /></p>
+
+<pre class="splash"><code><span class="keyword">var</span> calculatedMaxPinWidth: <span class="type">CGFloat</span> = <span class="number">0</span>
+<span class="keyword">var</span> calculatedMaxPinHeight: <span class="type">CGFloat</span> = <span class="number">0</span>
+</code></pre>
+
+<p><b>3. Calculate annotation view size variables</b> 
+<br />When we provide a custom view for our annotations, we also update our <code class="highlight">calculatedMaxPinWidth</code> and <code class="highlight">calculatedMaxPinHeight</code> :</p>
+
+<pre class="splash"><code><span class="keyword">func</span> mapView(<span class="keyword">_</span> mapView: <span class="type">MKMapView</span>, viewFor annotation: <span class="type">MKAnnotation</span>) -&gt; <span class="type">MKAnnotationView</span>? {
+
+    <span class="keyword">guard</span> !(annotation <span class="keyword">is</span> <span class="type">MKUserLocation</span>) <span class="keyword">else</span> { <span class="keyword">return nil</span> }
+
+    <span class="keyword">let</span> identifier = <span class="string">"mapPoint"</span>
+
+    <span class="keyword">var</span> annotationView: <span class="type">MKAnnotationView</span>?
+    <span class="keyword">if let</span> dequeuedAnnotationView = mapView.<span class="call">dequeueReusableAnnotationView</span>(withIdentifier: identifier) {
+        annotationView = dequeuedAnnotationView
+        annotationView?.<span class="property">annotation</span> = annotation
+    }
+    <span class="keyword">else</span> {
+        <span class="keyword">let</span> av = <span class="type">MKAnnotationView</span>(annotation: annotation, reuseIdentifier: identifier)
+        annotationView = av
+    }
+
+    <span class="keyword">if let</span> annotationView = annotationView,
+       <span class="keyword">let</span> mapPointAnnotation = annotationView.<span class="property">annotation</span> <span class="keyword">as</span>? <span class="type">MapPoint</span> {
+        <span class="keyword">let</span> mapPinAccessory = <span class="type">MapPinAccessoryView</span>.<span class="call">init</span>()
+        mapPinAccessory.<span class="property">icon</span>.<span class="property">image</span> = <span class="type">UIImage</span>(named: mapPointAnnotation.<span class="property">imageName</span>)
+        mapPinAccessory.<span class="property">titleLabel</span>.<span class="property">text</span> = mapPointAnnotation.<span class="property">title</span>
+        mapPinAccessory.<span class="call">layoutIfNeeded</span>()
+
+        calculatedMaxPinWidth = <span class="call">max</span>(mapPinAccessory.<span class="property">frame</span>.<span class="property">width</span>, calculatedMaxPinWidth)
+        calculatedMaxPinHeight = <span class="call">max</span>(mapPinAccessory.<span class="property">frame</span>.<span class="property">height</span>, calculatedMaxPinHeight)
+
+        <span class="comment">// To position touch-down in the middle bottom part</span>
+        annotationView.<span class="property">layer</span>.<span class="property">anchorPoint</span> = <span class="type">CGPoint</span>.<span class="call">init</span>(x: <span class="number">0.5</span>, y: <span class="number">1</span>)
+
+        annotationView.<span class="call">addSubview</span>(mapPinAccessory)
+        annotationView.<span class="property">frame</span> = mapPinAccessory.<span class="property">frame</span>
+    }
+
+    <span class="keyword">return</span> annotationView
+}
+</code></pre>
+
+<p><b>4. Adjust constant for Info view top anchor constraint</b> 
+<br />If we have some <code class="highlight">UIPanGestureRecognizer</code> added to the info view, which would call <code class="highlight">draggedView()</code> whenever we do dragging, we would simply update the <code class="highlight">top anchor (yOffset)</code> constraint for info view (to move it).</p>
+
+<pre class="splash"><code><span class="keyword">@objc func</span> draggedView() {
+    <span class="keyword">let</span> translation = panGesture.<span class="call">translation</span>(in: <span class="keyword">self</span>.<span class="property">view</span>)
+    
+    <span class="comment">// this way we force that user can't drag higher than actual pin height</span>
+    yOffset.<span class="property">constant</span> = <span class="call">max</span>(calculatedMaxPinHeight, yOffset.<span class="property">constant</span> + translation.<span class="property">y</span>)
+    panGesture.<span class="call">setTranslation</span>(<span class="type">CGPoint</span>.<span class="property">zero</span>, in: <span class="keyword">self</span>.<span class="property">view</span>)
+
+    <span class="call">recenterMapPins</span>()
+}
+</code></pre>
+
+<p><b>5. Recenter map pins</b> 
+<br />When user drags the info view, we call <code class="highlight">setVisibleMapRect</code> on map view, providing visible pins map rectangle and our recalculated edge insets:</p>
+
+<pre class="splash"><code><span class="keyword">func</span> recenterMapPins() {
+    <span class="keyword">let</span> region = <span class="keyword">self</span>.<span class="call">regionFor</span>(mapPoints: mapView.<span class="property">annotations</span> <span class="keyword">as</span>! [<span class="type">MapPoint</span>])
+    <span class="keyword">let</span> visiblePinsMapRect = <span class="type">MKMapRectForCoordinateRegion</span>(region: region)
+		
+    <span class="comment">// 5 is used as an extra space from sides</span>
+		
+    <span class="keyword">let</span> top = calculatedMaxPinHeight + <span class="number">5</span>
+    <span class="keyword">let</span> bottom = mapView.<span class="property">frame</span>.<span class="property">height</span> - yOffset.<span class="property">constant</span> - <span class="keyword">self</span>.<span class="property">view</span>.<span class="property">safeAreaInsets</span>.<span class="property">bottom</span> + <span class="number">5</span>
+    <span class="keyword">let</span> side = calculatedMaxPinWidth/<span class="number">2</span> + <span class="number">5</span>
+
+    mapView.<span class="call">setVisibleMapRect</span>(visiblePinsMapRect, edgePadding: 
+        <span class="type">UIEdgeInsets</span>(top: top, left: side, bottom: bottom, right: side), animated: <span class="keyword">false</span>)
+}
+</code></pre>
+
+<p>Annd… Done!</p>
+
+<h2 id="helper-methods">Helper methods</h2>
+
+<p>Helper method to get a region from given points</p>
+<pre class="splash"><code><span class="keyword">func</span> regionFor(mapPoints points: [<span class="type">MapPoint</span>]) -&gt; <span class="type">MKCoordinateRegion</span> {
+    <span class="keyword">var</span> r = <span class="type">MKMapRect</span>.<span class="property">null</span>
+
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span> ..&lt; points.<span class="property">count</span> {
+        <span class="keyword">let</span> p = <span class="type">MKMapPoint</span>(points[i].coordinate)
+        r = r.<span class="call">union</span>(<span class="type">MKMapRect</span>(x: p.<span class="property">x</span>, y: p.<span class="property">y</span>, width: <span class="number">0</span>, height: <span class="number">0</span>))
+    }
+
+    <span class="keyword">var</span> region = <span class="type">MKCoordinateRegion</span>(r)
+    <span class="comment">// 0.002 is simply to be minimum zoom level.</span>
+    region.<span class="property">span</span>.<span class="property">latitudeDelta</span> = <span class="call">max</span>(<span class="number">0.002</span>, region.<span class="property">span</span>.<span class="property">latitudeDelta</span>)
+    region.<span class="property">span</span>.<span class="property">longitudeDelta</span> = <span class="call">max</span>(<span class="number">0.002</span>, region.<span class="property">span</span>.<span class="property">longitudeDelta</span>)
+    <span class="keyword">return</span> region
+}
+</code></pre>
+
+<p>Helper method to get MKMapRect from region</p>
+<pre class="splash"><code><span class="keyword">func</span> MKMapRectForCoordinateRegion(region:<span class="type">MKCoordinateRegion</span>) -&gt; <span class="type">MKMapRect</span> {
+    <span class="keyword">let</span> topLeft = <span class="type">CLLocationCoordinate2D</span>(latitude: region.<span class="property">center</span>.<span class="property">latitude</span> + (region.<span class="property">span</span>.<span class="property">latitudeDelta</span>/<span class="number">2</span>), longitude: region.<span class="property">center</span>.<span class="property">longitude</span> - (region.<span class="property">span</span>.<span class="property">longitudeDelta</span>/<span class="number">2</span>))
+    <span class="keyword">let</span> bottomRight = <span class="type">CLLocationCoordinate2D</span>(latitude: region.<span class="property">center</span>.<span class="property">latitude</span> - (region.<span class="property">span</span>.<span class="property">latitudeDelta</span>/<span class="number">2</span>), longitude: region.<span class="property">center</span>.<span class="property">longitude</span> + (region.<span class="property">span</span>.<span class="property">longitudeDelta</span>/<span class="number">2</span>))
+
+    <span class="keyword">let</span> a = <span class="type">MKMapPoint</span>(topLeft)
+    <span class="keyword">let</span> b = <span class="type">MKMapPoint</span>(bottomRight)
+
+    <span class="keyword">return</span> <span class="type">MKMapRect</span>(origin: <span class="type">MKMapPoint</span>(x:<span class="call">min</span>(a.<span class="property">x</span>,b.<span class="property">x</span>), y:<span class="call">min</span>(a.<span class="property">y</span>,b.<span class="property">y</span>)), size: <span class="type">MKMapSize</span>(width: <span class="call">abs</span>(a.<span class="property">x</span>-b.<span class="property">x</span>), height: <span class="call">abs</span>(a.<span class="property">y</span>-b.<span class="property">y</span>)))
+}
+</code></pre>
+
+<h2 id="ps">P.S.</h2>
+
+<p><a href="https://github.com/GuntisTreulands/MKMapView-zoom-on-pins-with-inset/tree/master">Full code / demo, can be found here</a></p>
+
+
+  </div>
+
+  <!-- <div class="date">
+    Written on October  6, 2019
+  </div> -->
+
+  
+</article>
+
+    </div>
+    <br>
+    <div class="container">
+    <div class="PageNavigation">
+        
+          
+            <a class="totalRight" href="/custom_navigation_transition.html">Custom navigation transition &raquo; </a>
+          
+        
+        
+      </div>
+    </div>
+
+
+    <!-- <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+<a href="mailto:gtreulands@gmail.com"><i class="svg-icon email"></i></a>
+
+
+<a href="https://github.com/GuntisTreulands"><i class="svg-icon github"></i></a>
+
+<a href="https://www.linkedin.com/in/guntis-t-325905161"><i class="svg-icon linkedin"></i></a>
+
+
+<a href="https://www.twitter.com/gtreulands"><i class="svg-icon twitter"></i></a>
+<a href="http://stackoverflow.com/users/894671/guntis-treulands"><i class="svg-icon stackoverflow"></i></a>
+
+
+        </footer>
+      </div>
+    </div> -->
+    <br><br>
+    
+	<!-- Google Analytics -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-143179417-1', 'auto');
+		ga('send', 'pageview', {
+		  'page': '/MKMapView_center_on_map_pins_with_inset.html',
+		  'title': 'MKMapView center on map pins with inset'
+		});
+	</script>
+	<!-- End Google Analytics -->
+
+
+  </body>
+</html>
