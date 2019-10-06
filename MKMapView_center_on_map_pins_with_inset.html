@@ -77,9 +77,11 @@
 <p><img srcset="/assets/2019-10-6-storyboard_stuff.png 2x" /></p>
 
 <p><b>2. Declare helper variables</b> 
-<br />We also need to declare some variables to assist us in better zooming on our annotations. We need these to have some extra space from sides, top and bottom. Because by default - when annotations region is calculated, it considers only the exact points, so if an annotation would be on a border, it’s annoation view would be cut in the middle.</p>
+<br />We need to declare some variables to assist us - to have some extra space from sides, top and bottom. Because by default - when annotations region is calculated, it considers only the exact points, so if an annotation would be on a border, it’s annoation view would be cut in the middle. See example, when zoomed just to show two annotations by their coordinates:</p>
 
 <p><img srcset="/assets/2019-10-6-half_visible_pins.png 3x" /></p>
+
+<p>Our custom annotation box width is not taken into consideration on the sides.</p>
 
 <pre class="splash"><code><span class="keyword">var</span> calculatedMaxPinWidth: <span class="type">CGFloat</span> = <span class="number">0</span>
 <span class="keyword">var</span> calculatedMaxPinHeight: <span class="type">CGFloat</span> = <span class="number">0</span>
