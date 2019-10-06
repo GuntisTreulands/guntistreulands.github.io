@@ -71,7 +71,18 @@
 <h2 id="solution">Solution</h2>
 <p>Lucky for us, MKMapView provides us with just the thing we are looking for -  <br /><code class="highlight">setVisibleMapRect(_ mapRect: , edgePadding insets: , animated animate: )</code></p>
 
-<p><b>1. Info view top anchor constraint</b> 
+<p>We will integrate it in five easy steps:</p>
+
+<ol>
+  <li>Store topAnchor constraint for Info view (so we can adjust it’s constant when user drags it)</li>
+  <li>Declare helper variables (to store our custom map annotations width/height)</li>
+  <li>When adding annotations to map, calculate those helper variables</li>
+  <li>When user drags Info view - adjust it’s topAnchor constraint’s constant</li>
+  <li>Recenter map on pins</li>
+</ol>
+
+<p><br />
+<b>1. Info view top anchor constraint</b> 
 <br />We set up our <code class="highlight">UIViewController</code>: add <code class="highlight">MKMapView</code> and our draggable info pop up <code class="highlight">UIView</code>. We set up constraints, but the main thing here is - to have the top anchor constraint (y offset) for our info view - stored as an outlet in our class file.</p>
 
 <p><img srcset="/assets/2019-10-6-storyboard_stuff.png 2x" /></p>
