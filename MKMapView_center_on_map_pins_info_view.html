@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MKMapView map annotations with expandable info view – Guntis Treulands – Blog about swift coding</title>
+
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+    
+    <meta name="description" content="This is a follow up on previous post about MapView annotations. We will take previous demo one step further, to make an expandable info view, and tacke some tiny UX problems." />
+    <meta property="og:description" content="This is a follow up on previous post about MapView annotations. We will take previous demo one step further, to make an expandable info view, and tacke some tiny UX problems." />
+    
+    <meta name="author" content="Guntis Treulands" />
+
+    
+    <meta property="og:title" content="MKMapView map annotations with expandable info view" />
+    <meta property="twitter:title" content="MKMapView map annotations with expandable info view" />
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="Guntis Treulands - Blog about swift coding" href="/feed.xml" />
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+  </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <!-- <a href="/" class="site-avatar"><img src="http://static1.squarespace.com/static/558def25e4b0fc259f066636/5a49786bf9619ae3bb6a2564/5b68eeacaa4a99da3bcdc610/1545107487365/Swift_logo.png" /></a> -->
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="/">Guntis Treulands</a></h1>
+            <p class="site-description">Blog about swift coding</p>
+          </div>
+
+           <nav>
+            <!-- <a href="/swift">Swift</a> -->
+            <!-- <a href="/experiments">Experiments</a> -->
+            <a href="/about">About</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <center><z class="date">November 20, 2019</z></center>
+
+<article class="post">
+  <center><h1>MKMapView map annotations with expandable info view</h1></center>
+  
+  <center><z class="excerpt">3 minutes read</z></center>
+  <br> <br> <br>
+  <div class="entry">
+    <p>In previous <a href="https://gtreulands.com/MKMapView_center_on_map_pins_with_inset.html">blog post</a>, we made a mapView, which dynamically centered on annotations while we dragged the info view upwards.</p>
+
+<h2 id="requirement">Requirement</h2>
+
+<p>This time we need to adjust our info view, to be able to show custom amount of data. By default it should be collapsed at the bottom (revealing small amount of data), but user should be able to expand it, by dragging upwards, to reveal more information.</p>
+
+<p><img srcset="/assets/2019-11-20-final_product.gif 1x" /></p>
+
+<p>I want to do it by using only a scrollView, and avoid implementing gesture recognizers with custom logic. ScrollView has all the functionality we need to do what is necessary - it just needs some tweaking.</p>
+
+<h2 id="solution">Solution</h2>
+
+<p>The way we will implement this:
+<br />1.) Have scrollView above mapView;
+<br />2.) ScrollView will have contentInset from the top (so that data appears as collapsed at the bottom);
+<br />3.) ScrollView will let touches through in places where there is no content.</p>
+
+<p>First we create a subclass, that will let touches on scrollview throught to mapView, in places where scrollView is empty (has no subviews). That way - even though we have our scrollview almost completely over our mapView, touches will go through at places where scrollView has no content.</p>
+
+<pre class="splash"><code><span class="keyword">class</span> PassThroughScrollView: <span class="type">UIScrollView</span> {
+    <span class="keyword">override func</span> point(inside point: <span class="type">CGPoint</span>, with event: <span class="type">UIEvent</span>?) -&gt; <span class="type">Bool</span> {
+        <span class="keyword">return</span> subviews.<span class="call">contains</span>(where: {
+            !$0.<span class="property">isHidden</span>
+            &amp;&amp; $0.<span class="property">isUserInteractionEnabled</span>
+            &amp;&amp; $0.<span class="call">point</span>(inside: <span class="keyword">self</span>.<span class="call">convert</span>(point, to: $0), with: event)
+        })
+    }
+}
+</code></pre>
+
+<p>Then we add a scrollview <code class="highlight">PassThroughScrollView</code> to our storyboard. We place it as a subview to ViewControllers view. As you can see in the image - it’s covering almost all view (above mapView), except it will have 150 px offset from top. This will ensure, that when infoView will be fully expanded, we will still see a little bit of map at the top (and annotations).</p>
+
+<p><img srcset="/assets/2019-11-20-scrollview_in_story_board.png 2x" /></p>
+
+<p>Next we add an info view as a subview to scrollView. It’s just some view, that has an imageView and title label.</p>
+<pre class="splash"><code>infoView = <span class="type">InfoView</span>.<span class="call">init</span>()
+scrollView.<span class="call">addSubview</span>(infoView)
+
+infoView.<span class="property">topAnchor</span>.<span class="call">constraint</span>(equalTo: scrollView.<span class="property">topAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+infoView.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: scrollView.<span class="property">leftAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+infoView.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: scrollView.<span class="property">rightAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+infoView.<span class="property">bottomAnchor</span>.<span class="call">constraint</span>(equalTo: scrollView.<span class="property">bottomAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+infoView.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(equalTo: scrollView.<span class="property">widthAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+
+<span class="comment">// Some demo text...</span>
+infoView.<span class="property">titleLabel</span>.<span class="property">text</span> =  <span class="string">"Info text comes here\n\nInfo text comes here..."</span>
+infoView.<span class="call">layoutIfNeeded</span>()
+</code></pre>
+
+<p><img srcset="/assets/2019-11-20-info_view_added.png 2x" /></p>
+
+<p>Ok, now we have scrollview with info view in it, but we need all this content to appear collapsed/minimised at the bottom.
+To achieve that - we need to know the height of the collapsed content block. I chose 150 px.</p>
+
+<pre class="splash"><code>scrollView.<span class="property">contentInset</span> = <span class="type">UIEdgeInsets</span>.<span class="call">init</span>(top: scrollView.<span class="property">frame</span>.<span class="property">height</span>-<span class="call">min</span>(<span class="number">150</span>, infoView.<span class="property">frame</span>.<span class="property">height</span>) - <span class="keyword">self</span>.<span class="property">view</span>.<span class="property">safeAreaInsets</span>.<span class="property">bottom</span>, left: <span class="number">0</span>, bottom: <span class="number">0</span>, right: <span class="number">0</span>)
+</code></pre>
+
+<p>So, our cheat is that we just added a content offset from the top. Visually it looks like scrollview just starts at the bottom, but actually, if you notice (scroll indicators on the right side), it starts right where we placed it.</p>
+
+<p><img srcset="/assets/2019-11-20-scrollview_scroll_indicators.gif 1x" /></p>
+
+<p>Sure, we could just remove scroll indicators, or use some custom ones, or maybe even enable them only when we have expanded our info view. But that’s no fun.</p>
+
+<p>Let’s think about it. Basically, we need to have scroll indicators start from the collapsed position. So, we just set in our <code class="highlight">scrollViewDidScroll()</code> function, to have insets based on contentOffset. (Our added contentInset, makes the contentOffset.y be negative, until it scrolls to where real content starts).</p>
+
+<pre class="splash"><code><span class="keyword">func</span> scrollViewDidScroll(<span class="keyword">_</span> scrollView: <span class="type">UIScrollView</span>) {
+    scrollView.<span class="property">scrollIndicatorInsets</span> = <span class="type">UIEdgeInsets</span>.<span class="call">init</span>(top:<span class="call">max</span>(<span class="number">0</span>, -scrollView.<span class="property">contentOffset</span>.<span class="property">y</span>), left: <span class="number">0</span>, bottom: <span class="number">0</span>, right: <span class="number">0</span>)
+}
+</code></pre>
+
+<p><img srcset="/assets/2019-11-20-scrollview_scroll_indicators_wrong_offset.gif 1x" /></p>
+
+<p>It’s now great! But not perfect. You see - when we expand our scrollview, indicators show, that we are now in the middle of our content. But that’s not true! Well. it is true because we have invisible scrollView content offset. But visually it appears flawed.</p>
+
+<p>To fix it, we add a little bit of magic. We need to calculate adjustment, based on the ratio of scroll view height versus contentSize. Then use this ratio with the contentInset.top (or current contentOffset.y) (which ever is the smallest), to subtract this value for scrollIndicator’s top inset. <ins>That way, we will correctly calculate correct inset and scroll indicator will adjust it’s size, but keep it’s position at the start (0 positon), until info view is fully expanded.</ins></p>
+
+<pre class="splash"><code><span class="keyword">func</span> scrollViewDidScroll(<span class="keyword">_</span> scrollView: <span class="type">UIScrollView</span>) {
+    <span class="keyword">let</span> frameHeight = scrollView.<span class="property">frame</span>.<span class="property">height</span>
+		      - <span class="keyword">self</span>.<span class="property">view</span>.<span class="property">safeAreaInsets</span>.<span class="property">bottom</span>
+		      - <span class="call">max</span>(<span class="number">0</span>, -scrollView.<span class="property">contentOffset</span>.<span class="property">y</span>)
+		      
+    <span class="keyword">let</span> contentHeight = scrollView.<span class="property">contentSize</span>.<span class="property">height</span>
+			+ <span class="keyword">self</span>.<span class="property">view</span>.<span class="property">safeAreaInsets</span>.<span class="property">bottom</span>
+			+ <span class="call">max</span>(<span class="number">0</span>, -scrollView.<span class="property">contentOffset</span>.<span class="property">y</span>)
+
+    <span class="comment">// Some magic, to calculate proper scroll indicator top inset, 
+    // so that it would be at 0 position at all times, 
+    // until full page is revealed.</span>
+    <span class="keyword">let</span> ratio = <span class="call">min</span>(<span class="number">1</span>, frameHeight/contentHeight)
+    <span class="keyword">let</span> value = <span class="call">max</span>(<span class="number">0</span>, <span class="call">min</span>(scrollView.<span class="property">contentInset</span>.<span class="property">top</span>, 
+        scrollView.<span class="property">contentInset</span>.<span class="property">top</span> + scrollView.<span class="property">contentOffset</span>.<span class="property">y</span>))
+        
+    scrollView.<span class="property">scrollIndicatorInsets</span> = 
+        <span class="type">UIEdgeInsets</span>.<span class="call">init</span>(top: <span class="call">max</span>(<span class="number">0</span>, -scrollView.<span class="property">contentOffset</span>.<span class="property">y</span>)-value*ratio, 
+        left: <span class="number">0</span>, bottom: <span class="number">0</span>, right: <span class="number">0</span>)
+}
+</code></pre>
+
+<p>Just one more thing. I love how scrollView paging works. It kinda splits whole contentSize in pages, that are as large as scrollView frame. Paging then also gives us the “springy” feeling to jump to positions. That is exactly what I want - for it to collapsed/expanded positions.</p>
+
+<p>But I don’t want it to be paged afterwards (when scrolling in expanded size). To fix it, we will first need to set up <code class="highlight">scrollView.isPagingEnabled = true</code> when we set up our viewController, but afterwards, we also implement:</p>
+
+<pre class="splash"><code><span class="keyword">func</span> scrollViewDidScroll(<span class="keyword">_</span> scrollView: <span class="type">UIScrollView</span>) {
+    ...
+
+    <span class="keyword">if</span> scrollView.<span class="property">contentOffset</span>.<span class="property">y</span> &gt; <span class="number">0</span> {
+        scrollView.<span class="property">isPagingEnabled</span> = <span class="keyword">false</span>
+    } <span class="keyword">else</span> {
+        scrollView.<span class="property">isPagingEnabled</span> = <span class="keyword">true</span>
+    }
+}
+</code></pre>
+
+<p>Thus - it will make scrollView with paging enabled while we scroll from collapsed view to expanded (because then the contentOffset.y is negative), and later on, it will turn it off, and give us a smooth and free scrolling.</p>
+
+<p><img srcset="/assets/2019-11-20-final_product.gif 1x" /></p>
+
+<p>Annd… Done!</p>
+
+<h2 id="ps">P.S.</h2>
+
+<p><a href="https://github.com/GuntisTreulands/MKMapView-zoom-on-pins-info-view">Full code / demo, can be found here</a></p>
+
+  </div>
+
+  <!-- <div class="date">
+    Written on November 20, 2019
+  </div> -->
+
+  
+</article>
+
+    </div>
+    <br>
+    <div class="container">
+    <div class="PageNavigation">
+        
+          
+            <a class="totalRight" href="/MKMapView_center_on_map_pins_with_inset.html">MKMapView center on map annotations with inset &raquo; </a>
+          
+        
+        
+      </div>
+    </div>
+
+
+    <!-- <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+<a href="mailto:gtreulands@gmail.com"><i class="svg-icon email"></i></a>
+
+
+<a href="https://github.com/GuntisTreulands"><i class="svg-icon github"></i></a>
+
+<a href="https://www.linkedin.com/in/guntis-t-325905161"><i class="svg-icon linkedin"></i></a>
+
+
+<a href="https://www.twitter.com/gtreulands"><i class="svg-icon twitter"></i></a>
+<a href="http://stackoverflow.com/users/894671/guntis-treulands"><i class="svg-icon stackoverflow"></i></a>
+
+
+        </footer>
+      </div>
+    </div> -->
+    <br><br>
+    
+	<!-- Google Analytics -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-143179417-1', 'auto');
+		ga('send', 'pageview', {
+		  'page': '/MKMapView_center_on_map_pins_info_view.html',
+		  'title': 'MKMapView map annotations with expandable info view'
+		});
+	</script>
+	<!-- End Google Analytics -->
+
+
+  </body>
+</html>
