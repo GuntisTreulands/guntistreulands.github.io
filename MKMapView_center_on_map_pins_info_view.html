@@ -112,7 +112,7 @@ infoView.<span class="call">layoutIfNeeded</span>()
 <p>Ok, now we have scrollview with info view in it, but we need all this content to appear collapsed/minimised at the bottom.
 To achieve that - we need to know the height of the collapsed content block. I chose 150 px.</p>
 
-<pre class="splash"><code>scrollView.<span class="property">contentInset</span> = <span class="type">UIEdgeInsets</span>.<span class="call">init</span>(top: scrollView.<span class="property">frame</span>.<span class="property">height</span>-<span class="call">min</span>(<span class="number">150</span>, infoView.<span class="property">frame</span>.<span class="property">height</span>) - <span class="keyword">self</span>.<span class="property">view</span>.<span class="property">safeAreaInsets</span>.<span class="property">bottom</span>, left: <span class="number">0</span>, bottom: <span class="number">0</span>, right: <span class="number">0</span>)
+<pre class="splash"><code>scrollView.<span class="property">contentInset</span> = <span class="type">UIEdgeInsets</span>(top: scrollView.<span class="property">frame</span>.<span class="property">height</span>-<span class="call">min</span>(<span class="number">150</span>, infoView.<span class="property">frame</span>.<span class="property">height</span>) - <span class="keyword">self</span>.<span class="property">view</span>.<span class="property">safeAreaInsets</span>.<span class="property">bottom</span>, left: <span class="number">0</span>, bottom: <span class="number">0</span>, right: <span class="number">0</span>)
 </code></pre>
 
 <p>So, our cheat is that we just added a content offset from the top. Visually it looks like scrollview just starts at the bottom, but actually, if you notice (scroll indicators on the right side), it starts right where we placed it.</p>
@@ -124,7 +124,7 @@ To achieve that - we need to know the height of the collapsed content block. I c
 <p>Let’s think about it. Basically, we need to have scroll indicators start from the collapsed position. So, we just set in our <code class="highlight">scrollViewDidScroll()</code> function, to have insets based on contentOffset. (Our added contentInset, makes the contentOffset.y be negative, until it scrolls to where real content starts).</p>
 
 <pre class="splash"><code><span class="keyword">func</span> scrollViewDidScroll(<span class="keyword">_</span> scrollView: <span class="type">UIScrollView</span>) {
-    scrollView.<span class="property">scrollIndicatorInsets</span> = <span class="type">UIEdgeInsets</span>.<span class="call">init</span>(top:<span class="call">max</span>(<span class="number">0</span>, -scrollView.<span class="property">contentOffset</span>.<span class="property">y</span>), left: <span class="number">0</span>, bottom: <span class="number">0</span>, right: <span class="number">0</span>)
+    scrollView.<span class="property">scrollIndicatorInsets</span> = <span class="type">UIEdgeInsets</span>(top:<span class="call">max</span>(<span class="number">0</span>, -scrollView.<span class="property">contentOffset</span>.<span class="property">y</span>), left: <span class="number">0</span>, bottom: <span class="number">0</span>, right: <span class="number">0</span>)
 }
 </code></pre>
 
@@ -151,7 +151,7 @@ To achieve that - we need to know the height of the collapsed content block. I c
         scrollView.<span class="property">contentInset</span>.<span class="property">top</span> + scrollView.<span class="property">contentOffset</span>.<span class="property">y</span>))
         
     scrollView.<span class="property">scrollIndicatorInsets</span> = 
-        <span class="type">UIEdgeInsets</span>.<span class="call">init</span>(top: <span class="call">max</span>(<span class="number">0</span>, -scrollView.<span class="property">contentOffset</span>.<span class="property">y</span>)-value*ratio, 
+        <span class="type">UIEdgeInsets</span>(top: <span class="call">max</span>(<span class="number">0</span>, -scrollView.<span class="property">contentOffset</span>.<span class="property">y</span>)-value*ratio, 
         left: <span class="number">0</span>, bottom: <span class="number">0</span>, right: <span class="number">0</span>)
 }
 </code></pre>
