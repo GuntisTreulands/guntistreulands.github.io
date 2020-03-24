@@ -182,7 +182,7 @@
 
 <h2 id="take-away">Take away</h2>
 
-<p>Every time you set a <code class="highlight">NSManagedObject</code> value - same or new one - it will be notified, to any part of application, that listens to it.</p>
+<p>Every time you set a <code class="highlight">NSManagedObject</code> value - to a new one or same as before - it will be notified, to any part of application, that listens to it.</p>
 
 <p>Probably in most cases, this won’t make any difference, not even visible change if <code class="highlight">tableView.reloadData()</code> is used. 
 <br />And in other cases, with a large dataset - overwritting is just much much faster, than checking/fetching/comparing every single entry. 
@@ -241,7 +241,7 @@
 
 		ga('create', 'UA-143179417-1', 'auto');
 		ga('send', 'pageview', {
-		  'page': '/NSFetchedResultsController_controller_did_update.html',
+		  'page': '/NSFetchedResultsController_controller_did_change_content.html',
 		  'title': 'NSFetchedResultsControllerDelegate controllerDidChangeContent'
 		});
 	</script>
