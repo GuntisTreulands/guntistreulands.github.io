@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>NSFetchedResultsControllerDelegate controllerDidChangeContent – Guntis Treulands – Blog about swift coding</title>
+
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+    
+    <meta name="description" content="While integrating Core Data, I discovered that a certain functionality works different than I thought it did. So let's go through it once more." />
+    <meta property="og:description" content="While integrating Core Data, I discovered that a certain functionality works different than I thought it did. So let's go through it once more." />
+    
+    <meta name="author" content="Guntis Treulands" />
+
+    
+    <meta property="og:title" content="NSFetchedResultsControllerDelegate controllerDidChangeContent" />
+    <meta property="twitter:title" content="NSFetchedResultsControllerDelegate controllerDidChangeContent" />
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="Guntis Treulands - Blog about swift coding" href="/feed.xml" />
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+  </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <!-- <a href="/" class="site-avatar"><img src="http://static1.squarespace.com/static/558def25e4b0fc259f066636/5a49786bf9619ae3bb6a2564/5b68eeacaa4a99da3bcdc610/1545107487365/Swift_logo.png" /></a> -->
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="/">Guntis Treulands</a></h1>
+            <p class="site-description">Blog about swift coding</p>
+          </div>
+
+           <nav>
+            <!-- <a href="/swift">Swift</a> -->
+            <!-- <a href="/experiments">Experiments</a> -->
+            <a href="/about">About</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <center><z class="date">February 20, 2020</z></center>
+
+<article class="post">
+  <center><h1>NSFetchedResultsControllerDelegate controllerDidChangeContent</h1></center>
+  
+  <center><z class="excerpt">2 minutes read</z></center>
+  <br> <br> <br>
+  <div class="entry">
+    <h2 id="requirement">Requirement</h2>
+
+<p>Imagine a super simple API or rather something like RSS, that contains a list of items for example - active stores:</p>
+
+<pre class="splash"><code>{
+    <span class="string">"stores"</span>: [
+        {
+            <span class="string">"name"</span>:<span class="string">"STORE 1"</span>,
+            <span class="string">"picture"</span>:<span class="string">"https://url.com/picture1"</span>,
+        },
+        {
+            <span class="string">"name"</span>:<span class="string">"STORE 2"</span>,
+            <span class="string">"picture"</span>:<span class="string">"https://url.com/picture2"</span>,
+        },
+        {
+            <span class="string">"name"</span>:<span class="string">"STORE 3"</span>,
+            <span class="string">"picture"</span>:<span class="string">"https://url.com/picture3"</span>,
+        }
+    ]
+}
+</code></pre>
+
+<p>This API does not give you any information if some new store opens up, or if any had been closed. So.. being the lazy me, I would implement it like this:</p>
+
+<p>1.) Periodically download data from this API in background<br />
+2.) Disable all existing saved stores in app<br />
+3.) Iterate the ones, that are found in feed - and, if we had such store - overwrite meta data and enable them again<br />
+4.) Save background context, so that UI would reflect changes.</p>
+
+<p>This way, I would:</p>
+<ul>
+  <li>disable any stores that are no longer in feed,<br /></li>
+  <li>leave enabled any stores that are still in feed,<br /></li>
+  <li>by overwriting data every time (even if it’s the same data), I skip validation and make sure we always have fresh meta data.</li>
+</ul>
+
+<h2 id="reality">Reality</h2>
+
+<p>Turns out, there is one major problem with my lazy implementation, that potentially could become a bad user experience.</p>
+
+<p>I presumed, that if I:</p>
+
+<p>1.) Disable STORE 1,<br />
+2.) Enable STORE 1,<br />
+3.) Save managed object context,</p>
+
+<p>then STORE 1 would NOT be notified as a change. Because - it’s value has NOT changed. It was enabled before change, and it is enabled after saving.</p>
+
+<p>But allas - <strong>THIS IS NOT THE CASE!</strong></p>
+
+<h2 id="some-tests">Some tests</h2>
+
+<p>Let’s test a few scenarios to find out how it actually works.</p>
+
+<p>I set up a demo, that has some attributes and values added in Core Data.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"><strong>Attribute</strong></th>
+      <th style="text-align: left"><strong>Value</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">title</td>
+      <td style="text-align: left">“Description2”</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">enabled</td>
+      <td style="text-align: left">true</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>On UI side - a table view on main thread shows this data in a list, with an NSFetchedResultsControllerDelegate hooked up, to receive any change notification.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"> </th>
+      <th style="text-align: left"><strong>Scenario</strong></th>
+      <th style="text-align: left"><strong>Steps</strong></th>
+      <th style="text-align: center"><strong>Change notification</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">1</td>
+      <td style="text-align: left">Change value each<br />time to a different value</td>
+      <td style="text-align: left">1.) title = “Adjusted from BG context”<br />2.) Save context <br />3.) title = “Description2”<br /> 4.) Save context</td>
+      <td style="text-align: center">YES</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2</td>
+      <td style="text-align: left">Change value to different<br />and back to original</td>
+      <td style="text-align: left">1.) title = “Adjusted from BG context”<br />2.) title = “Description2”<br />3.) Save context</td>
+      <td style="text-align: center">YES</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">3</td>
+      <td style="text-align: left">Same as test 2, but with bools</td>
+      <td style="text-align: left">1.) enabled = false<br />2.) enabled = true<br />3.) Save context</td>
+      <td style="text-align: center">YES</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">4</td>
+      <td style="text-align: left">Set to the same value<br />without changing it</td>
+      <td style="text-align: left">1.) enabled = true<br />2.) Save context</td>
+      <td style="text-align: center">YES</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /><center><i>Scenario 1: Change value each time to a different value</i></center>
+<img srcset="/assets/2020-03-20_changes_1.gif 2x" /><br /></p>
+
+<center><i>Scenario 2: Change value to different and back to original</i></center>
+<center><i>Scenario 3: Same as test 2, but with bools</i></center>
+<center><i>Scenario 4: Set to the same value without changing it </i></center>
+<p><img srcset="/assets/2020-03-20_changes_2.gif 2x" /></p>
+
+<h2 id="take-away">Take away</h2>
+
+<p>Every time you set a <code class="highlight">NSManagedObject</code> value - same or new one - it will be notified, to any part of application, that listens to it.</p>
+
+<p>Probably in most cases, this won’t make any difference, not even visible change if <code class="highlight">tableView.reloadData()</code> is used. 
+<br />And in other cases, with a large dataset - overwritting is just much much faster, than checking/fetching/comparing every single entry. 
+<br />But in that 1% case, when app is complicated, using relative small data set and developer aspires to make the best user experience, better take this into consideration.</p>
+
+  </div>
+
+  <!-- <div class="date">
+    Written on February 20, 2020
+  </div> -->
+
+  
+</article>
+
+    </div>
+    <br>
+    <div class="container">
+    <div class="PageNavigation">
+        
+          
+            <a class="totalRight" href="/MKMapView_center_on_map_pins_info_view.html">MKMapView map annotations with expandable info view &raquo; </a>
+          
+        
+        
+      </div>
+    </div>
+
+
+    <!-- <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+<a href="mailto:gtreulands@gmail.com"><i class="svg-icon email"></i></a>
+
+
+<a href="https://github.com/GuntisTreulands"><i class="svg-icon github"></i></a>
+
+<a href="https://www.linkedin.com/in/guntis-t-325905161"><i class="svg-icon linkedin"></i></a>
+
+
+<a href="https://www.twitter.com/gtreulands"><i class="svg-icon twitter"></i></a>
+<a href="http://stackoverflow.com/users/894671/guntis-treulands"><i class="svg-icon stackoverflow"></i></a>
+
+
+        </footer>
+      </div>
+    </div> -->
+    <br><br>
+    
+	<!-- Google Analytics -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-143179417-1', 'auto');
+		ga('send', 'pageview', {
+		  'page': '/NSFetchedResultsController_controller_did_update.html',
+		  'title': 'NSFetchedResultsControllerDelegate controllerDidChangeContent'
+		});
+	</script>
+	<!-- End Google Analytics -->
+
+
+  </body>
+</html>

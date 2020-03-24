@@ -177,6 +177,32 @@ img {
   background: #eee;
 }
 
+table {
+  border-collapse: collapse;
+  border: 1px solid #d9dee1;
+}
+
+tr:nth-child(even) {
+  background: #f4f7f9;
+}
+
+tr:nth-child(odd) {
+  background: #FFF;
+}
+
+th {
+  border: 1px solid #d9dee1;
+  padding: 7px;
+  text-align: left;
+}
+
+td {
+  border: 1px solid #d9dee1;
+  padding: 7px;
+  vertical-align: middle;
+  text-align: left;
+}
+
 .clearfix:before,
 .clearfix:after {
   content: " ";
