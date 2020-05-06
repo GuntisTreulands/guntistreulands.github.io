@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Experimenting with NSLayoutMargin – Guntis Treulands – Blog about swift coding</title>
+
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+    
+    <meta name="description" content="Some experiments with NSLayoutMargin to position elements in a UIView." />
+    <meta property="og:description" content="Some experiments with NSLayoutMargin to position elements in a UIView." />
+    
+    <meta name="author" content="Guntis Treulands" />
+
+    
+    <meta property="og:title" content="Experimenting with NSLayoutMargin" />
+    <meta property="twitter:title" content="Experimenting with NSLayoutMargin" />
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="Guntis Treulands - Blog about swift coding" href="/feed.xml" />
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+  </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <!-- <a href="/" class="site-avatar"><img src="http://static1.squarespace.com/static/558def25e4b0fc259f066636/5a49786bf9619ae3bb6a2564/5b68eeacaa4a99da3bcdc610/1545107487365/Swift_logo.png" /></a> -->
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="/">Guntis Treulands</a></h1>
+            <p class="site-description">Blog about swift coding</p>
+          </div>
+
+           <nav>
+            <!-- <a href="/swift">Swift</a> -->
+            <!-- <a href="/experiments">Experiments</a> -->
+            <a href="/about">About</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <center><z class="date">July  1, 2019</z></center>
+
+<article class="post">
+  <center><h1>Experimenting with NSLayoutMargin</h1></center>
+  
+  <center><z class="excerpt">2 minutes read</z></center>
+  <br> <br> <br>
+  <div class="entry">
+    <h2 id="requirement">Requirement</h2>
+
+<p>So, we have a custom view, where we need to position multiple subviews. First thing that comes to mind is - use <code class="highlight">UIStackView</code>!</p>
+
+<p>But wait..  <code class="highlight">UIStackView</code> is a subclass of <code class="highlight">UIView</code>, thus, it will also get rendered. And if we nest stack-views within stack-views within stack-views… (which is super easy way to position stuff), and if we use it in tableview, it could impact scrolling fps, if the UI is complicated enough! And don’t forget about increased load time. (Ok, I might be overreacting, but still)</p>
+
+<h2 id="solution">Solution</h2>
+
+<p>UILayoutMargin helps us with that. It’s basically just like a view, that you can position, but it does not get rendered, nor it nests stuff. It just gives margins to easier position elements.</p>
+
+<h6 id="1-opposite-sides">1.) Opposite sides</h6>
+<p>This is how easy it is to position two elements on opposite sides.</p>
+
+<center><i>(black frame is just to mark guide frame)</i></center>
+<p><img srcset="/assets/2019-7-1-layout-margin-example-1.png 2x" aa="" /></p>
+
+<pre class="splash"><code><span class="comment">// Create box 1</span>
+<span class="keyword">let</span> box1 = <span class="type">UIView</span>()
+box1.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
+box1.<span class="property">backgroundColor</span> = .<span class="dotAccess">red</span>
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addSubview</span>(box1)
+
+<span class="comment">// Create box 2</span>
+<span class="keyword">let</span> box2 = <span class="type">UIView</span>()
+box2.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
+box2.<span class="property">backgroundColor</span> = .<span class="dotAccess">blue</span>
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addSubview</span>(box2)
+        
+<span class="comment">// Create UILayoutGuide</span>
+<span class="keyword">let</span> guide = <span class="type">UILayoutGuide</span>()
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addLayoutGuide</span>(guide)
+
+<span class="comment">// Position guide to be 50 pix from left and right</span>
+guide.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: <span class="keyword">self</span>.<span class="property">view</span>.<span class="property">leftAnchor</span>, constant: <span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+guide.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: <span class="keyword">self</span>.<span class="property">view</span>.<span class="property">rightAnchor</span>, constant: -<span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+
+<span class="comment">// Set boxes width/height to 50</span>
+box1.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box1.<span class="property">heightAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">heightAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+
+<span class="comment">// Position boxes in y-center</span>
+box1.<span class="property">centerYAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">centerYAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">centerYAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">centerYAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+
+<span class="comment">// And position boxes</span>
+box1.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">leftAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">rightAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+</code></pre>
+<p><br /></p>
+
+<h6 id="2-spacers">2.) Spacers</h6>
+
+<p>In case we need to center both objects, within a layout guide, we can use multiple layout guides, as spacers.</p>
+
+<center><i>(black frame is just to mark guide frame)</i></center>
+<p><img srcset="/assets/2019-7-1-layout-margin-example-2.png 2x" /></p>
+
+<pre class="splash"><code><span class="comment">// Create box 1</span>
+<span class="keyword">let</span> box1 = <span class="type">UIView</span>()
+box1.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
+box1.<span class="property">backgroundColor</span> = .<span class="dotAccess">red</span>
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addSubview</span>(box1)
+
+<span class="comment">// Create box 2</span>
+<span class="keyword">let</span> box2 = <span class="type">UIView</span>()
+box2.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
+box2.<span class="property">backgroundColor</span> = .<span class="dotAccess">blue</span>
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addSubview</span>(box2)
+        
+<span class="comment">// Create UILayoutGuide</span>
+<span class="keyword">let</span> guide = <span class="type">UILayoutGuide</span>()
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addLayoutGuide</span>(guide)
+
+<span class="comment">// Create spacer UILayoutGuides</span>
+<span class="keyword">let</span> space1 = <span class="type">UILayoutGuide</span>()
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addLayoutGuide</span>(space1)
+<span class="keyword">let</span> space2 = <span class="type">UILayoutGuide</span>()
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addLayoutGuide</span>(space2)
+<span class="keyword">let</span> space3 = <span class="type">UILayoutGuide</span>()
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addLayoutGuide</span>(space3)
+
+<span class="comment">// Position guide to be 50 pix from left and right</span>
+guide.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: <span class="keyword">self</span>.<span class="property">view</span>.<span class="property">leftAnchor</span>, constant: <span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+guide.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: <span class="keyword">self</span>.<span class="property">view</span>.<span class="property">rightAnchor</span>, constant: -<span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+
+<span class="comment">// Provide width constraints for spaces, but set them as low priority, so
+// that they would strech instead of boxes (thus, width value is not important).</span>
+<span class="keyword">let</span> space1Constraint = space1.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">1</span>)
+space1Constraint.<span class="property">priority</span> = .<span class="dotAccess">defaultLow</span>
+space1Constraint.<span class="property">isActive</span> = <span class="keyword">true
+let</span> space2Constraint = space2.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(equalTo: space1.<span class="property">widthAnchor</span>)
+space2Constraint.<span class="property">priority</span> = .<span class="dotAccess">defaultLow</span>
+space2Constraint.<span class="property">isActive</span> = <span class="keyword">true
+let</span> space3Constraint = space3.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(equalTo: space1.<span class="property">widthAnchor</span>)
+space3Constraint.<span class="property">priority</span> = .<span class="dotAccess">defaultLow</span>
+space3Constraint.<span class="property">isActive</span> = <span class="keyword">true</span>
+
+<span class="comment">// Set boxes width/height to 50</span>
+box1.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box1.<span class="property">heightAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">heightAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+
+<span class="comment">// Position boxes in y-center</span>
+box1.<span class="property">centerYAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">centerYAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">centerYAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">centerYAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+
+<span class="comment">// Position boxes with spacers. Notice that we don't provide space2 anchors,
+// because it's anchors are set by box1 and box2.</span>
+space1.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">leftAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box1.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: space1.<span class="property">rightAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box1.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: space2.<span class="property">leftAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: space2.<span class="property">rightAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: space3.<span class="property">leftAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+space3.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">rightAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+</code></pre>
+<p><br /></p>
+
+<h6 id="3-different-size-spacers">3.) Different size spacers</h6>
+
+<p>What if we want different size spacers? No problem!
+Simply provide multiplier, when setting spacer width!</p>
+
+<center><i>(black frame is just to mark guide frame)</i></center>
+<p><img srcset="/assets/2019-7-1-layout-margin-example-3.png 2x" /></p>
+
+<pre class="splash"><code><span class="comment">// Create box 1</span>
+<span class="keyword">let</span> box1 = <span class="type">UIView</span>()
+box1.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
+box1.<span class="property">backgroundColor</span> = .<span class="dotAccess">red</span>
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addSubview</span>(box1)
+
+<span class="comment">// Create box 2</span>
+<span class="keyword">let</span> box2 = <span class="type">UIView</span>()
+box2.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
+box2.<span class="property">backgroundColor</span> = .<span class="dotAccess">blue</span>
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addSubview</span>(box2)
+        
+<span class="comment">// Create UILayoutGuide</span>
+<span class="keyword">let</span> guide = <span class="type">UILayoutGuide</span>()
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addLayoutGuide</span>(guide)
+
+<span class="comment">// Create spacer UILayoutGuides</span>
+<span class="keyword">let</span> space1 = <span class="type">UILayoutGuide</span>()
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addLayoutGuide</span>(space1)
+<span class="keyword">let</span> space2 = <span class="type">UILayoutGuide</span>()
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addLayoutGuide</span>(space2)
+<span class="keyword">let</span> space3 = <span class="type">UILayoutGuide</span>()
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addLayoutGuide</span>(space3)
+
+<span class="comment">// Position guide to be 50 pix from left and right</span>
+guide.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: <span class="keyword">self</span>.<span class="property">view</span>.<span class="property">leftAnchor</span>, constant: <span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+guide.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: <span class="keyword">self</span>.<span class="property">view</span>.<span class="property">rightAnchor</span>, constant: -<span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+
+<span class="comment">// Provide width constraints for spaces, but set them as low priority, so
+// that they would strech instead of boxes (thus, width value is not important).
+// Space 2 width multiplier is 3 - it will be 3x larger than other spaces.</span>
+<span class="keyword">let</span> space1Constraint = space1.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">1</span>)
+space1Constraint.<span class="property">priority</span> = .<span class="dotAccess">defaultLow</span>
+space1Constraint.<span class="property">isActive</span> = <span class="keyword">true
+let</span> space2Constraint = space2.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(equalTo: space1.<span class="property">widthAnchor</span>, multiplier: <span class="number">3</span>)
+space2Constraint.<span class="property">priority</span> = .<span class="dotAccess">defaultLow</span>
+space2Constraint.<span class="property">isActive</span> = <span class="keyword">true
+let</span> space3Constraint = space3.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(equalTo: space1.<span class="property">widthAnchor</span>)
+space3Constraint.<span class="property">priority</span> = .<span class="dotAccess">defaultLow</span>
+space3Constraint.<span class="property">isActive</span> = <span class="keyword">true</span>
+
+<span class="comment">// Set boxes width/height to 50</span>
+box1.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box1.<span class="property">heightAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">heightAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+
+<span class="comment">// Position boxes in y-center</span>
+box1.<span class="property">centerYAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">centerYAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">centerYAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">centerYAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+
+<span class="comment">// Position boxes with spacers. Notice that we don't provide space2 anchors,
+// because it's anchors are set by box1 and box2.</span>
+space1.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">leftAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box1.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: space1.<span class="property">rightAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box1.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: space2.<span class="property">leftAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: space2.<span class="property">rightAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: space3.<span class="property">leftAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+space3.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">rightAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+</code></pre>
+<p><br /></p>
+
+<h6 id="4-both-boxes-relatively-centered">4.) Both boxes relatively centered</h6>
+
+<p>What if we have 2 objects that are different width, but center them both (so that on left and right side it would have same space) ?</p>
+
+<center><i>(black frame is just to mark guide frame)</i></center>
+<p><img srcset="/assets/2019-7-1-layout-margin-example-4.png 2x" /></p>
+
+<pre class="splash"><code><span class="comment">// Create box 1</span>
+<span class="keyword">let</span> box1 = <span class="type">UIView</span>()
+box1.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
+box1.<span class="property">backgroundColor</span> = .<span class="dotAccess">red</span>
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addSubview</span>(box1)
+
+<span class="comment">// Create box 2</span>
+<span class="keyword">let</span> box2 = <span class="type">UIView</span>()
+box2.<span class="property">translatesAutoresizingMaskIntoConstraints</span> = <span class="keyword">false</span>
+box2.<span class="property">backgroundColor</span> = .<span class="dotAccess">blue</span>
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addSubview</span>(box2)
+        
+<span class="comment">// Create UILayoutGuide</span>
+<span class="keyword">let</span> guide = <span class="type">UILayoutGuide</span>()
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addLayoutGuide</span>(guide)
+
+<span class="comment">// Create spacer UILayoutGuides</span>
+<span class="keyword">let</span> space1 = <span class="type">UILayoutGuide</span>()
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addLayoutGuide</span>(space1)
+<span class="keyword">let</span> space2 = <span class="type">UILayoutGuide</span>()
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addLayoutGuide</span>(space2)
+<span class="keyword">let</span> space3 = <span class="type">UILayoutGuide</span>()
+<span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addLayoutGuide</span>(space3)
+
+<span class="comment">// Position guide to be 50 pix from left and right</span>
+guide.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: <span class="keyword">self</span>.<span class="property">view</span>.<span class="property">leftAnchor</span>, constant: <span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+guide.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: <span class="keyword">self</span>.<span class="property">view</span>.<span class="property">rightAnchor</span>, constant: -<span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+
+<span class="comment">// Provide width constraints for spaces, but set them as low priority, so
+// that they would strech instead of boxes (thus, width value is not important).
+// Space 2 width multiplier is 0.5 - it will be 2x smaller than other spaces.</span>
+<span class="keyword">let</span> space1Constraint = space1.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">1</span>)
+space1Constraint.<span class="property">priority</span> = .<span class="dotAccess">defaultLow</span>
+space1Constraint.<span class="property">isActive</span> = <span class="keyword">true
+let</span> space2Constraint = space2.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(equalTo: space1.<span class="property">widthAnchor</span>, multiplier: <span class="number">0.5</span>)
+space2Constraint.<span class="property">priority</span> = .<span class="dotAccess">defaultLow</span>
+space2Constraint.<span class="property">isActive</span> = <span class="keyword">true
+let</span> space3Constraint = space3.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(equalTo: space1.<span class="property">widthAnchor</span>)
+space3Constraint.<span class="property">priority</span> = .<span class="dotAccess">defaultLow</span>
+space3Constraint.<span class="property">isActive</span> = <span class="keyword">true</span>
+
+<span class="comment">// Set boxes width/height to 50, but first box will be 120 wide</span>
+box1.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">120</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box1.<span class="property">heightAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">widthAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">heightAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">50</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+
+<span class="comment">// Position boxes in y-center</span>
+box1.<span class="property">centerYAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">centerYAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">centerYAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">centerYAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+
+<span class="comment">// Position boxes with spacers. Notice that we don't provide space2 anchors,
+// because it's anchors are set by box1 and box2.</span>
+space1.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">leftAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box1.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: space1.<span class="property">rightAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box1.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: space2.<span class="property">leftAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">leftAnchor</span>.<span class="call">constraint</span>(equalTo: space2.<span class="property">rightAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+box2.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: space3.<span class="property">leftAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+space3.<span class="property">rightAnchor</span>.<span class="call">constraint</span>(equalTo: guide.<span class="property">rightAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+</code></pre>
+<p><br /></p>
+
+<h2 id="ps">P.S.</h2>
+
+<p>I didn’t provide, but I also y-centered layout guides:</p>
+<pre class="splash"><code> guide.<span class="property">centerYAnchor</span>.<span class="call">constraint</span>(equalTo: view.<span class="property">centerYAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+ space1.<span class="property">centerYAnchor</span>.<span class="call">constraint</span>(equalTo: view.<span class="property">centerYAnchor</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+</code></pre>
+
+<p>To make UILayoutGuide frame visible, I simply added a view with border. Use it for debugging only.</p>
+<pre class="splash"><code><span class="type">DispatchQueue</span>.<span class="property">main</span>.<span class="call">asyncAfter</span>(deadline: .<span class="dotAccess">now</span>()) {
+    <span class="keyword">for</span> guide <span class="keyword">in self</span>.<span class="property">view</span>.<span class="property">layoutGuides</span> {
+        <span class="keyword">let</span> view1 = <span class="type">UIView</span>(frame: guide.<span class="property">layoutFrame</span>)
+        view1.<span class="property">layer</span>.<span class="property">borderColor</span> = <span class="type">UIColor</span>.<span class="property">black</span>.<span class="property">cgColor</span>
+        view1.<span class="property">layer</span>.<span class="property">borderWidth</span> = <span class="number">1.0</span>
+        <span class="keyword">self</span>.<span class="property">view</span>.<span class="call">addSubview</span>(view1)    
+    }
+}
+</code></pre>
+
+<p>But in order to see those frames, you then also need to provide a height for layout guides:</p>
+<pre class="splash"><code>guide.<span class="property">heightAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">100</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+space1.<span class="property">heightAnchor</span>.<span class="call">constraint</span>(equalToConstant: <span class="number">20</span>).<span class="property">isActive</span> = <span class="keyword">true</span>
+</code></pre>
+
+<p><a href="/assets/2019-7-1-uilayoutguide.playground.zip">Playground file with the experiments</a></p>
+
+
+  </div>
+
+  <!-- <div class="date">
+    Written on July  1, 2019
+  </div> -->
+
+  
+</article>
+
+    </div>
+    <br>
+    <div class="container">
+    <div class="PageNavigation">
+        
+          <a class="prev" href="/custom_table_view_cells_with_xcode_image_alignment.html">&laquo; Custom UITableViewCell with Xcode assets image alignment</a>
+          
+            <a class="next" href="/NSLayoutAnchor_UITableViewCell.html">NSLayoutAnchor & UITableViewCell &raquo; </a>
+          
+        
+        
+      </div>
+    </div>
+
+
+    <!-- <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+<a href="mailto:gtreulands@gmail.com"><i class="svg-icon email"></i></a>
+
+
+<a href="https://github.com/GuntisTreulands"><i class="svg-icon github"></i></a>
+
+<a href="https://www.linkedin.com/in/guntis-t-325905161"><i class="svg-icon linkedin"></i></a>
+
+
+<a href="https://www.twitter.com/gtreulands"><i class="svg-icon twitter"></i></a>
+<a href="http://stackoverflow.com/users/894671/guntis-treulands"><i class="svg-icon stackoverflow"></i></a>
+
+
+        </footer>
+      </div>
+    </div> -->
+    <br><br>
+    
+	<!-- Google Analytics -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-143179417-1', 'auto');
+		ga('send', 'pageview', {
+		  'page': '/experimenting-with-NSLayoutMargin.html',
+		  'title': 'Experimenting with NSLayoutMargin'
+		});
+	</script>
+	<!-- End Google Analytics -->
+
+
+  </body>
+</html>
