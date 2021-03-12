@@ -1,7 +1,14 @@
 {
-    "webcredentials": {
-        "apps": [
-            "355GY66FJT.com.myemerg.myemerg"
-        ]
-    }
+     "applinks": {
+         "apps": [],
+         "details": [
+              {
+           "appID": "355GY66FJT.com.myemerg.myemerg",
+           "paths": ["*"]
+              }
+          ]
+      },
+      "webcredentials": {
+         "apps": ["355GY66FJT.com.myemerg.myemerg"]
+      }
 }
